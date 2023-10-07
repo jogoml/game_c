@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.22.1)
+project(game_c VERSION 1.0 LANGUAGES C)
+file(GLOB SOURCES "src/*.c")
+add_executable(game_c ${SOURCES})
+target_include_directories(game_c PUBLIC include)
