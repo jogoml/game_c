@@ -1,5 +1,4 @@
-#include "utils.h"
-#include "map.h"
+#include "main.h"
 
 int main(int argc, char** argv){
     Context* context = malloc(sizeof(Context));
@@ -11,6 +10,11 @@ int main(int argc, char** argv){
         printf("ERROR GET MAP\n");
         return 1;
     }
+    clearScreen();
     showMap(context);
+    if(eventLoop(context)!=0){
+        printf("ERROR EVENT LOOP\n");
+        return 1;
+    }
     
 }
