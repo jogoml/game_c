@@ -20,7 +20,7 @@ Monster *monster_defense(Monster *monster, Player *ply)
 int get_reward()
 {
     srand((unsigned int)time(NULL));
-    int ra = rand() % (1 + 1) + 0;
+    int ra = rand() % (2);
     return ra;
 }
 
@@ -28,7 +28,7 @@ int get_reward_type()
 {
    // if (get_reward) {
     srand((unsigned int)time(NULL));
-    int type = rand() % (3) + 0;
+    int type = rand() % (3);
     return type;
     //}
 }
