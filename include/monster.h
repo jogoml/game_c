@@ -10,6 +10,9 @@ typedef struct Monster {
     int current_attack;
     int type;
     int exp_drop;
+    int height;
+    int width;
+    char **sprite;
 } Monster;
 
 typedef struct Player {
