@@ -2,8 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-// Initialisation d'un joueur avec des valeurs par défaut
-void initPlayer(Player *player) {
+void initPlayer(Player *player, const char *name) {
     player->lvl = 1;
     player->exp = 0;
     player->health = 100;
@@ -11,16 +10,32 @@ void initPlayer(Player *player) {
     player->money = 0;
     player->attack = 15;
     player->def = 20;
-    strcpy(player->name, "Joueur");
+    strcpy(player->name, name);
 }
 
 void createPlayer(Player *player) {
     printf("Entrez le nom du joueur : ");
     scanf("%s", player->name);
-    
-    initPlayer(player);
 
-    printf("Joueur créé avec succès !\n");
+    FILE *file = fopen("joueur.txt", "w");
+    if (file != NULL) {
+        initPlayer(player, player->name);
+
+        fprintf(file, "Nom : %s\n", player->name);
+        fprintf(file, "Niveau : %d\n", player->lvl);
+        fprintf(file, "Expérience : %d\n", player->exp);
+        fprintf(file, "Santé : %d\n", player->health);
+        fprintf(file, "Mana : %d\n", player->mana);
+        fprintf(file, "Argent : %d\n", player->money);
+        fprintf(file, "Attaque : %d\n", player->attack);
+        fprintf(file, "Défense : %d\n", player->def);
+
+        fclose(file);
+
+        printf("Joueur créé avec succès et enregistré dans le fichier 'joueur.txt' !\n");
+    } else {
+        printf("Impossible d'enregistrer le joueur dans le fichier.\n");
+    }
 }
 
 void displayPlayer(const Player *player) {

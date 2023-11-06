@@ -12,7 +12,7 @@ typedef struct {
     int def;
 } Player;
 
-void initPlayer(Player *player);
+void initPlayer(Player *player, const char *name);
 void createPlayer(Player *player);
 void displayPlayer(const Player *player);
 
