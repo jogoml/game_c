@@ -2,18 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-typedef struct Arme {
+typedef struct Weapon {
     char *name;        // Nom de l'arme
     int attaqueMin;      // Attaque minimale
     int attaqueMax;      // Attaque maximale
     int attaquesParTour; // Nombre d'attaques par tour
     float price;
     int equiped;
-} Arme;
+} Weapon;
 
-Arme *init_arme();
-Arme **init_list_arme(int size);
-Arme **add_arme(Arme **spell, Arme *new_spell, int pos);
-Arme *create_arme(char *name, float price, int attaqueMax, int attaqueMin, int attaqueParTour, int equiped);
-Arme **inventory_arme();
+Weapon *init_weapon();
+Weapon **init_list_weapon(int size);
+Weapon **add_weapon(Weapon **spell, Weapon *new_spell, int pos);
+Weapon *create_weapon(char *name, float price, int attaqueMax, int attaqueMin, int attaqueParTour, int equiped);
+Weapon **inventory_weapon();

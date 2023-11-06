@@ -1,46 +1,46 @@
 #include "armure.h"
 
-Armure *init_armure()
+Armor *init_armor()
 {
-    Armure *armure = malloc(sizeof(Armure));
-    armure->name = malloc(sizeof(char) * 100);
-    armure->protection = 0;
-    armure->price = 0;
-    armure->equiped = 0;
+    Armor *armor = malloc(sizeof(Armor));
+    armor->name = malloc(sizeof(char) * 100);
+    armor->protection = 0;
+    armor->price = 0;
+    armor->equiped = 0;
 
-    return armure;
+    return armor;
 }
 
-Armure **init_list_armure(int size)
+Armor **init_list_armor(int size)
 {
-    Armure **armure = malloc(sizeof(Armure *) * size);
+    Armor **armor = malloc(sizeof(Armor *) * size);
     for (int i = 0; i < size; i++)
-        armure[i] = init_armure();
-    return armure;
+        armor[i] = init_armor();
+    return armor;
 }
 
-Armure **add_armure(Armure **armure, Armure *new_armure, int pos)
+Armor **add_armor(Armor **armor, Armor *new_armor, int pos)
 {
-    armure[pos]->name = new_armure->name;
-    armure[pos]->price = new_armure->price;
-    armure[pos]->protection = new_armure->protection;
-    armure[pos]->equiped = new_armure->equiped;
-    return armure;
+    armor[pos]->name = new_armor->name;
+    armor[pos]->price = new_armor->price;
+    armor[pos]->protection = new_armor->protection;
+    armor[pos]->equiped = new_armor->equiped;
+    return armor;
 }
 
-Armure *create_armure(char *name, float price, int protection, int equiped)
+Armor *create_armor(char *name, float price, int protection, int equiped)
 {
-    Armure *armure = init_armure();
-    strcpy(armure->name, name);
-    armure->protection = protection;
-    armure->price = price;
-    armure->equiped = equiped;
-    return armure;
+    Armor *armor = init_armor();
+    strcpy(armor->name, name);
+    armor->protection = protection;
+    armor->price = price;
+    armor->equiped = equiped;
+    return armor;
 }
 
-Armure **inventory_armure()
+Armor **inventory_armor()
 {
-    Armure **armure = init_list_armure(8);
+    Armor **armor = init_list_armor(8);
     char *name = malloc(sizeof(char) *50);
     int protection;
     float price;
@@ -58,10 +58,10 @@ Armure **inventory_armure()
     fgets(malloc(sizeof (char) * 100), 100, f);
     for(int i = 0; i < line-1; i++) {
         fscanf(f,"\n%[^;];%d;%f", name, &protection, &price);
-        armure[i] = create_armure(name, price, protection, 0);
-        armure = add_armure(armure, armure[i], i);
+        armor[i] = create_armor(name, price, protection, 0);
+        armor = add_armor(armor, armor[i], i);
     }
     free(name);
     fclose(f);
-    return armure;
+    return armor;
 }
