@@ -12,16 +12,7 @@ char *m2[] = {
     "          (o.o)                    ",
     "           |=|                     ",
     "          __|__                    ",
-    "        //.=|=.0                   ",
-    "       // .=|=.                    ",
-    "       || .=|=.                    ",
-    "       || (_=_)                    ",
-    "         (:| |:)                   ",
-    "          || ||                    ",
-    "          () ()                    ",
-    "          || ||                    ",
-    "          || ||                    ",
-    "         ==' '==                   "};
+    "        //.=|=.0                   "};
 
 
 void attributSpriteToMonster(Monster * monster){
@@ -43,6 +34,7 @@ void attributSpriteToMonster(Monster * monster){
 }
 
 void displayMonster(Fight *fight) {
+    clearScreen();
     char display[SCREEN_HEIGHT][SCREEN_WIDTH];
 
     for (int i = 0; i < SCREEN_HEIGHT; i++) {
@@ -52,6 +44,9 @@ void displayMonster(Fight *fight) {
     }
     int targeted;
     for (int i = 0; i < fight->nbMonsters; i++) {
+        if(fight->monsters[i].health <= 0){
+            continue;
+        }
         if (i == fight->target) {
             targeted = 2;
             for (int k = 0; k < MONSTER_WIDTH; k++) {
@@ -68,7 +63,7 @@ void displayMonster(Fight *fight) {
             }
         }
     }
-    if (fight->target >= 0){
+    if (fight->target >= 0 && fight->monsters[fight->target].health > 0){
         display[0][fight->target * MONSTER_WIDTH + MONSTER_WIDTH / 2 + SPACE] = 'v';
     }
 

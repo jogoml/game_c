@@ -2,8 +2,9 @@
 #define _DISPLAY_MONSTER_H_INCLUDED
 
 #include <string.h>
-#include "monster.h"
 #include <time.h>
+#include "monster.h"
+#include "cli.h"
 
 #define SCREEN_WIDTH 195
 #define SCREEN_HEIGHT 15
