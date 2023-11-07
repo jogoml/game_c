@@ -4,6 +4,7 @@
 
 typedef struct Monster {
     float health;
+    float max_health;
     int def;
     int attack_min;
     int attack_max;
@@ -11,7 +12,6 @@ typedef struct Monster {
     int type;
     int exp_drop;
     int height;
-    int width;
     char **sprite;
 } Monster;
 
