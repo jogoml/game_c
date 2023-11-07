@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 typedef struct {
-    char name[50];
+    char *name;
     int lvl;
     int exp;
     int health;
@@ -15,6 +15,7 @@ typedef struct {
 void initPlayer(Player *player, const char *name);
 void createPlayer(Player *player);
 void displayPlayer(const Player *player);
-int search_player(Player *joueur);
+int search_player(Player *player);
+void free_player(Player *player);
 
 #endif

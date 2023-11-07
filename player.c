@@ -1,6 +1,7 @@
 #include "player.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 void initPlayer(Player *player, const char *name) {
     player->lvl = 1;
@@ -14,10 +15,24 @@ void initPlayer(Player *player, const char *name) {
 }
 
 void createPlayer(Player *player) {
-    printf("Entrez le nom du joueur : ");
-    scanf("%s", player->name);
+    printf("Entrez le nom du personnage : ");
+    char name[50];
+    scanf("%s", name);
 
-    FILE *file = fopen("joueur.txt", "w");
+    if (player->name != NULL) {
+        char *temp = (char *)realloc(player->name, strlen(name) + 1);
+        if (temp != NULL) {
+            player->name = temp;
+        } else {
+            printf("erreur lors de la création d'un nouveau personnage");
+        }
+        free(temp);
+    } else {
+        player->name = (char *)malloc(strlen(name) + 1);
+    }
+    strcpy(player->name, name);
+
+    FILE *file = fopen("player.txt", "w");
     if (file != NULL) {
         initPlayer(player, player->name);
 
@@ -31,10 +46,8 @@ void createPlayer(Player *player) {
         fprintf(file, "Défense : %d\n", player->def);
 
         fclose(file);
-
-        printf("Joueur créé avec succès et enregistré dans le fichier 'joueur.txt' !\n");
     } else {
-        printf("Impossible d'enregistrer le joueur dans le fichier.\n");
+        printf("Impossible d'enregistrer le personnage dans le fichier.\n");
     }
 }
 
@@ -49,21 +62,29 @@ void displayPlayer(const Player *player) {
     printf("Défense : %d\n", player->def);
 }
 
-int search_player(Player *joueur) {
-    FILE *file = fopen("joueur.txt", "r");
+int search_player(Player *player) {
+    FILE *file = fopen("player.txt", "r");
     if (file != NULL) {
         char line[100];
+        char name[100];
         if (fgets(line, sizeof(line), file) != NULL) {
+            if (sscanf(line, "Nom : %99s", name) == 1) {
+                player->name = (char *)malloc(strlen(name) + 1);
+                if (player->name != NULL) {
+                    strcpy(player->name, name);
+                } else {
+                    printf("erreur lors de la recuperation de la sauvegarde\n");
+                    return 0;
+                }
+            }
+            fscanf(file, "Niveau : %d\n", &player->lvl);
+            fscanf(file, "Expérience : %d\n", &player->exp);
+            fscanf(file, "Santé : %d\n", &player->health);
+            fscanf(file, "Mana : %d\n", &player->mana);
+            fscanf(file, "Argent : %d\n", &player->money);
+            fscanf(file, "Attaque : %d\n", &player->attack);
+            fscanf(file, "Défense : %d\n", &player->def);
 
-            sscanf(line, "Nom : %s", joueur->name);
-            fscanf(file, "Niveau : %d\n", &joueur->lvl);
-            fscanf(file, "Expérience : %d\n", &joueur->exp);
-            fscanf(file, "Santé : %d\n", &joueur->health);
-            fscanf(file, "Mana : %d\n", &joueur->mana);
-            fscanf(file, "Argent : %d\n", &joueur->money);
-            fscanf(file, "Attaque : %d\n", &joueur->attack);
-            fscanf(file, "Défense : %d\n", &joueur->def);
-            
             fclose(file);
             return 1;
         }
@@ -71,3 +92,16 @@ int search_player(Player *joueur) {
     }
     return 0;
 }
+
+
+
+void free_player(Player *player) {
+    if (player->name != NULL) {
+        free(player->name);
+    }
+    free(player);
+}
+    
+    
+    
+    

@@ -5,10 +5,10 @@
 
 int main() {
     int choice;
-    Player joueur;
+    Player *player = (Player *)malloc(sizeof(Player));
     int playerExists = 0;
 
-    playerExists = search_player(&joueur);
+    playerExists = search_player(player);
 
     printf("Bienvenue dans le jeu!\n");
 
@@ -16,7 +16,7 @@ int main() {
         printf("\nMenu :\n");
         printf("1 - Commencer une nouvelle partie\n");
         if (playerExists) {
-            printf("2 - Afficher les caractéristiques du joueur\n");
+            printf("2 - Afficher les caractéristiques du personnage\n");
         }
         printf("0 - Quitter le jeu\n");
         printf(" : ");
@@ -26,25 +26,25 @@ int main() {
             case 1:
                 if (playerExists) {
                     char confirm;
-                    printf("Un joueur existe déjà. Voulez-vous le supprimer et commencer une nouvelle partie ? (O/N) : ");
+                    printf("Un personnage existe déjà. Voulez-vous le supprimer et commencer une nouvelle partie ? (O/N) : ");
                     scanf(" %c", &confirm);
                     if (confirm == 'O' || confirm == 'o') {
-                        playerExists = 0;
-                        createPlayer(&joueur);
-                    }else{
-                    	continue;
+                        createPlayer(player);
+                    } else {
+                        continue;
                     }
                 } else {
-                    createPlayer(&joueur);
+                    player = (Player *)malloc(sizeof(Player));
+                    createPlayer(player);
+                    playerExists = 1;
                 }
                 launch_game();
-               
-                playerExists = search_player(&joueur);
+                playerExists = search_player(player);
                 break;
             case 2:
                 if (playerExists) {
-                    printf("\nCaractéristiques du joueur :\n");
-                    displayPlayer(&joueur);
+                    printf("\nCaractéristiques du personnage :\n");
+                    displayPlayer(player);
                 }
                 break;
             case 0:
@@ -54,6 +54,10 @@ int main() {
                 printf("Option invalide. Réessayez.\n");
         }
     } while (choice != 0);
+
+    if (player != NULL) {
+        free_player(player);
+    }
 
     return 0;
 }
