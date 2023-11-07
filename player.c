@@ -48,3 +48,26 @@ void displayPlayer(const Player *player) {
     printf("Attaque : %d\n", player->attack);
     printf("Défense : %d\n", player->def);
 }
+
+int search_player(Player *joueur) {
+    FILE *file = fopen("joueur.txt", "r");
+    if (file != NULL) {
+        char line[100];
+        if (fgets(line, sizeof(line), file) != NULL) {
+
+            sscanf(line, "Nom : %s", joueur->name);
+            fscanf(file, "Niveau : %d\n", &joueur->lvl);
+            fscanf(file, "Expérience : %d\n", &joueur->exp);
+            fscanf(file, "Santé : %d\n", &joueur->health);
+            fscanf(file, "Mana : %d\n", &joueur->mana);
+            fscanf(file, "Argent : %d\n", &joueur->money);
+            fscanf(file, "Attaque : %d\n", &joueur->attack);
+            fscanf(file, "Défense : %d\n", &joueur->def);
+            
+            fclose(file);
+            return 1;
+        }
+        fclose(file);
+    }
+    return 0;
+}

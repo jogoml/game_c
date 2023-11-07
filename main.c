@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "player.h"
+#include "launch_game.h"
 
 int main() {
     int choice;
     Player joueur;
     int playerExists = 0;
+
+    playerExists = search_player(&joueur);
 
     printf("Bienvenue dans le jeu!\n");
 
@@ -26,12 +29,17 @@ int main() {
                     printf("Un joueur existe déjà. Voulez-vous le supprimer et commencer une nouvelle partie ? (O/N) : ");
                     scanf(" %c", &confirm);
                     if (confirm == 'O' || confirm == 'o') {
+                        playerExists = 0;
                         createPlayer(&joueur);
+                    }else{
+                    	continue;
                     }
                 } else {
                     createPlayer(&joueur);
-                    playerExists = 1;
                 }
+                launch_game();
+               
+                playerExists = search_player(&joueur);
                 break;
             case 2:
                 if (playerExists) {

@@ -15,5 +15,6 @@ typedef struct {
 void initPlayer(Player *player, const char *name);
 void createPlayer(Player *player);
 void displayPlayer(const Player *player);
+int search_player(Player *joueur);
 
 #endif
