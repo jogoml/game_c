@@ -16,39 +16,42 @@ char *m2[] = {
 //######################################################
 //                       EXEMPLE                      
 
-// Fight *fight = malloc(sizeof(Fight));
-// fight->nbMonsters = 5;
-// fight->target = 1;
-// fight->monsters = malloc(sizeof(Monster) * fight->nbMonsters);
+    // Fight *fight = malloc(sizeof(Fight));
+    // fight->nbMonsters = 5;
+    // fight->target = 1;
+    // fight->monsters = malloc(sizeof(Monster) * fight->nbMonsters);
 
-// fight->monsters[0].health = 20;
-// fight->monsters[0].height = 5;
-// attributSpriteToMonster(&(fight->monsters[0]));
+    // fight->monsters[0].health = 20;
+    // fight->monsters[0].height = 5;
+    // fight->monsters[0].type = 1;
+    // attributSpriteToMonster(&(fight->monsters[0]));
 
-// fight->monsters[1].health = 100;
-// fight->monsters[1].height = 5;
-// attributSpriteToMonster(&(fight->monsters[1]));
+    // fight->monsters[1].health = 100;
+    // fight->monsters[1].height = 5;
+    // fight->monsters[1].type = 2;
+    // attributSpriteToMonster(&(fight->monsters[1]));
 
-// fight->monsters[2].health = 100;
-// fight->monsters[2].height = 5;
-// attributSpriteToMonster(&(fight->monsters[2]));
+    // fight->monsters[2].health = 100;
+    // fight->monsters[2].height = 5;
+    // fight->monsters[2].type = 1;
+    // attributSpriteToMonster(&(fight->monsters[2]));
 
-// fight->monsters[3].health = 100;
-// fight->monsters[3].height = 5;
-// attributSpriteToMonster(&(fight->monsters[3]));
+    // fight->monsters[3].health = 100;
+    // fight->monsters[3].height = 5;
+    // fight->monsters[3].type = 2;
+    // attributSpriteToMonster(&(fight->monsters[3]));
 
-// fight->monsters[4].health = 100;
-// fight->monsters[4].height = 5;
-// attributSpriteToMonster(&(fight->monsters[4]));
+    // fight->monsters[4].health = 100;
+    // fight->monsters[4].height = 5;
+    // fight->monsters[4].type = 1;
+    // attributSpriteToMonster(&(fight->monsters[4]));
 
-// displayMonster(fight);
+    // displayMonster(fight);
 
 //######################################################
 void attributSpriteToMonster(Monster * monster){
     monster->sprite = malloc(sizeof(char *) * monster->height);
-    srand(time(NULL));
-    int r = rand() % 2;
-    if (r == 0) {
+    if (monster->type == 1) {
         for (int i = 0; i < monster->height; i++) {
             monster->sprite[i] = malloc(sizeof(char) * (MONSTER_WIDTH + 1)); // +1 for the null terminator
             strcpy(monster->sprite[i], m1[i]);

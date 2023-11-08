@@ -2,7 +2,6 @@
 #define _DISPLAY_MONSTER_H_INCLUDED
 
 #include <string.h>
-#include <time.h>
 #include "monster.h"
 #include "cli.h"
 
