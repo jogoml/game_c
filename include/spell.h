@@ -1,3 +1,6 @@
+#ifndef SPELL_H
+#define SPELL_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,3 +28,5 @@ Spell **init_list_spell(int size);
 Spell **add_spell(Spell **spell, Spell *new_spell, int pos);
 Spell *create_spell(char *name, spell_type type, int damage, int def, int mana_cost, float price, int level, float care);
 Spell **inventory_spell();
+
+#endif

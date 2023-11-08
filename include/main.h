@@ -4,6 +4,9 @@
 #include "utils.h"
 #include "loop.h"
 #include "map.h"
-#include "display_monster.h"
+#include "player.h"
+#include "monster.h"
+#include "launch_game.h"
+//#include "display_monster.h"
 
 #endif
