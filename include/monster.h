@@ -39,11 +39,11 @@ typedef struct Fight {
     int target;
     Monster *monsters;
 } Fight;
-Monster *monster_attack(Monster *monster);
-Monster *monster_defense(Monster *monster, Player *ply);
+void monster_attack(Monster *monster);
+void monster_defense(Monster *monster, Player *ply);
 int get_reward();
 int get_reward_type();
-Monster *monster_death(Monster *monster, Player *ply);
+void monster_death(Monster *monster, Player *ply);
 int exist_armor(Player *ply, int id);
 int exist_weapon(Player *ply, int id);
 

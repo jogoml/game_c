@@ -1,21 +1,19 @@
 #include "monster.h"
 
-Monster *monster_attack(Monster *monster)
+void monster_attack(Monster *monster)
 {
     if (monster->health > 0) {
         srand((unsigned int)time(NULL));
         monster->current_attack = rand() % (monster->attack_max - monster->attack_min + 1) + monster->attack_min;
     }
-    return monster;
 }
 
-Monster *monster_defense(Monster *monster, Player *ply)
+void monster_defense(Monster *monster, Player *ply)
 {
     if (monster->health > 0) {
         if (monster->def <= ply->current_attack)
             monster->health = (monster->health >= ply->current_attack ? monster->health - ply->current_attack + monster->def : 0); 
     }
-    return monster;
 }
 
 int get_reward()
@@ -52,7 +50,7 @@ int exist_weapon(Player *ply, int id)
     return 0;
 }
 
-Monster *monster_death(Monster *monster, Player *ply)
+void monster_death(Monster *monster, Player *ply)
 {
     srand((unsigned int)time(NULL));
     int reward = get_reward_type();
@@ -104,5 +102,4 @@ Monster *monster_death(Monster *monster, Player *ply)
             printf("Vous avez obtenue %d mana en plus !\n", mana);
         }
     }
-    return monster;
 }

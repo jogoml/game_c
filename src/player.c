@@ -173,7 +173,6 @@ Player *player_defense(Player *ply, Fight *fight)
 {
     for (int i = 0; i < fight->nbMonsters; i++) {
         monster_attack(&fight->monsters[i]);
-        printf("%d\n", fight->monsters[i].current_attack);
         if (ply->health > 0) {
             if (ply->def <= fight->monsters[i].current_attack)
                 ply->health = (ply->health >= fight->monsters[i].current_attack ? ply->health - fight->monsters[i].current_attack + ply->def : 0); 
