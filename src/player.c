@@ -19,12 +19,12 @@ Player *init_player()
     Weapon *weapon = create_weapon("épée en bois",5, 2, 1, 1, 0);
     ply->weapons = add_weapon(ply->weapons, weapon, ply->nb_arme);
     ply->nb_arme++;
-    equiped_weapon(weapon, ply);
+    equip_weapon(weapon, ply);
 
     Armor *armor = create_armor("Robe d'Apprenti", 0, 1, 0);
     ply->armors = add_armor(ply->armors, armor, ply->nb_armure);
     ply->nb_armure++;
-    equiped_armor(armor, ply);
+    equip_armor(armor, ply);
 
     return ply;
 }
@@ -55,7 +55,7 @@ Player *use_spell(Spell *spell, Player *ply)
     }   
     return ply;
 }*/
-Player *equiped_weapon(Weapon *weapon, Player *ply)
+Player *equip_weapon(Weapon *weapon, Player *ply)
 {
     for (int i = 0; i < ply->nb_arme; i++) {
         if (ply->weapons[i]->name == weapon->name) {
@@ -69,7 +69,7 @@ Player *equiped_weapon(Weapon *weapon, Player *ply)
     return ply;
 }
 
-Player *equiped_armor(Armor *armor, Player *ply)
+Player *equip_armor(Armor *armor, Player *ply)
 {
     for (int i = 0; i < ply->nb_armure; i++) {
         if (ply->armors[i]->name == armor->name) {
@@ -156,7 +156,7 @@ Player *use_spell(Player *ply, int key, Fight *fight)
     if (ply->spell[(key -48)-1]->type == OFFENSIVE) {
         ply->current_attack = ply->spell[(key -48)-1]->damage;
         for(int i = 0; i < fight->nbMonsters; i++)
-            fight->monsters[i] = monster_defense(fight->monsters[i], ply);
+            monster_defense(&fight->monsters[i], ply);
         ply->nb_attack--;
     } else if (ply->spell[(key -48)-1]->type == DEFENSE) {
         ply->def += ply->spell[(key -48)-1]->def;
@@ -172,10 +172,11 @@ Player *use_spell(Player *ply, int key, Fight *fight)
 Player *player_defense(Player *ply, Fight *fight)
 {
     for (int i = 0; i < fight->nbMonsters; i++) {
-        fight->monsters[i] = monster_attack(fight->monsters[i]);
+        monster_attack(&fight->monsters[i]);
+        printf("%d\n", fight->monsters[i].current_attack);
         if (ply->health > 0) {
             if (ply->def <= fight->monsters[i].current_attack)
-                ply->health = (ply->health > fight->monsters[i].current_attack ? ply->health - fight->monsters[i].current_attack + ply->def : 0); 
+                ply->health = (ply->health >= fight->monsters[i].current_attack ? ply->health - fight->monsters[i].current_attack + ply->def : 0); 
         } else 
             return NULL;
     }
@@ -203,7 +204,7 @@ Player *player_attack(Player *ply, Fight *fight, char key)
         srand((unsigned int)time(NULL));
         ply->current_attack = rand() % (ply->attack_max - ply->attack_min + 1) + ply->attack_min;
         printf("attaque: %d\n", ply->current_attack);
-        fight->monsters[fight->target] = monster_defense(fight->monsters[fight->target], ply);
+        monster_defense(&fight->monsters[fight->target], ply);
         printf("santé monstre: %f\n", fight->monsters[fight->target].health);
         ply->nb_attack--;
     }
@@ -222,7 +223,7 @@ Player *player_attack(Player *ply, Fight *fight, char key)
             while (id_arme < 48 || id_arme - 48 > ply->nb_arme) {
                 id_arme = getchar();
             }
-            equiped_weapon(ply->weapons[(id_arme - 48) -1], ply);
+            equip_weapon(ply->weapons[(id_arme - 48) -1], ply);
         }
     }
     if (key == '4') {
@@ -231,7 +232,7 @@ Player *player_attack(Player *ply, Fight *fight, char key)
             while (id_armure < 48 || id_armure - 48 > ply->nb_armure) {
                 id_armure = getchar();
             }
-            equiped_armor(ply->armors[(id_armure - 48) -1], ply);
+            equip_armor(ply->armors[(id_armure - 48) -1], ply);
         }
     }
     return ply;

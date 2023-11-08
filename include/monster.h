@@ -39,18 +39,18 @@ typedef struct Fight {
     int target;
     Monster *monsters;
 } Fight;
-Monster monster_attack(Monster monster);
-Monster monster_defense(Monster monster, Player *ply);
+Monster *monster_attack(Monster *monster);
+Monster *monster_defense(Monster *monster, Player *ply);
 int get_reward();
 int get_reward_type();
-Monster monster_death(Monster monster, Player *ply);
+Monster *monster_death(Monster *monster, Player *ply);
 int exist_armor(Player *ply, int id);
 int exist_weapon(Player *ply, int id);
 
 Player *init_player();
 Player *reinit_player_info(Player *ply);
-Player *equiped_weapon(Weapon *weapon, Player *ply);
-Player *equiped_armor(Armor *armor, Player *ply);
+Player *equip_weapon(Weapon *weapon, Player *ply);
+Player *equip_armor(Armor *armor, Player *ply);
 Weapon *get_player_current_weapon(Player *ply);
 Armor *get_player_current_armor(Player *ply);
 int display_player_armor(Player *ply);

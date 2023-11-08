@@ -1,19 +1,19 @@
 #include "monster.h"
 
-Monster monster_attack(Monster monster)
+Monster *monster_attack(Monster *monster)
 {
-    if (monster.health > 0) {
+    if (monster->health > 0) {
         srand((unsigned int)time(NULL));
-        monster.current_attack = rand() % (monster.attack_max - monster.attack_min + 1) + monster.attack_min;
+        monster->current_attack = rand() % (monster->attack_max - monster->attack_min + 1) + monster->attack_min;
     }
     return monster;
 }
 
-Monster monster_defense(Monster monster, Player *ply)
+Monster *monster_defense(Monster *monster, Player *ply)
 {
-    if (monster.health > 0) {
-        if (monster.def <= ply->current_attack)
-            monster.health = (monster.health > ply->current_attack ? monster.health - ply->current_attack + monster.def : 0); 
+    if (monster->health > 0) {
+        if (monster->def <= ply->current_attack)
+            monster->health = (monster->health >= ply->current_attack ? monster->health - ply->current_attack + monster->def : 0); 
     }
     return monster;
 }
@@ -52,16 +52,17 @@ int exist_weapon(Player *ply, int id)
     return 0;
 }
 
-Monster monster_death(Monster monster, Player *ply)
+Monster *monster_death(Monster *monster, Player *ply)
 {
     srand((unsigned int)time(NULL));
     int reward = get_reward_type();
-    if (monster.health == 0) {
-        int exp = (monster.type * 2) + 5;
+    if (monster->health == 0) {
+        int exp = (monster->type * 2) + 5;
         ply->exp += exp;
         printf("Vous avez obtenue %d exp en plus !\n", exp);
+        printf("reward %d", reward);
         if (reward == 0) {
-            float money = (monster.type * 10) + 10;
+            float money = (monster->type * 10) + 10;
             ply->money += money;
             printf("Vous avez obtenue %f pièces !\n", money);
         }
@@ -98,7 +99,7 @@ Monster monster_death(Monster monster, Player *ply)
                 }
             }
         } else if (reward == 3) {
-            int mana = (monster.type * 3) + 5;
+            int mana = (monster->type * 3) + 5;
             ply->mana += mana;
             printf("Vous avez obtenue %d mana en plus !\n", mana);
         }
