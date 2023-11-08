@@ -23,7 +23,7 @@ Spell **init_list_spell(int size)
 }
 
 
-Spell *create_spell(char *name, spell_type type, int damage, int def, int mana_cost, float price, int level)
+Spell *create_spell(char *name, spell_type type, int damage, int def, int mana_cost, float price, int level, float care)
 {
     Spell *spell = init_spell();
     strcpy(spell->name, name);
@@ -33,6 +33,7 @@ Spell *create_spell(char *name, spell_type type, int damage, int def, int mana_c
 	spell->mana_cost = mana_cost;
 	spell->price = price;
     spell->level = level;
+    spell->care = care;
     return spell;
 }
 
@@ -71,13 +72,13 @@ Spell **inventory_spell()
     for(int i = 0; i < line-2; i++) {
         fscanf(f,"\n%[^;];%[^;];%f;%d;%d;%d;%d;%d", name, type, &price, &level,&degat, &mana_cost, &def, &care);
         if (strcmp("DEFENSE", type) == 0) {
-            spell[i] = create_spell(name, DEFENSE, degat, def, mana_cost, price, level);
+            spell[i] = create_spell(name, DEFENSE, degat, def, mana_cost, price, level, care);
             spell = add_spell(spell, spell[i], i);
         } else if (strcmp("OFFENSIVE", type) == 0) {
-            spell[i] = create_spell(name, OFFENSIVE, degat, def, mana_cost, price, level);
+            spell[i] = create_spell(name, OFFENSIVE, degat, def, mana_cost, price, level, care);
             spell = add_spell(spell, spell[i], i);
         }else if (strcmp("CARE", type) == 0) {
-            spell[i] = create_spell(name, CARE, degat, def, mana_cost, price, level);
+            spell[i] = create_spell(name, CARE, degat, def, mana_cost, price, level, care);
             spell = add_spell(spell, spell[i], i);
         }
     }

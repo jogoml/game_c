@@ -1,17 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 // Structure pour représenter une armure
-typedef struct Armure {
+typedef struct Armor {
     char *name;        // Nom de l'armure
     int protection;      // Valeur de protection
     float price;
     int equiped;
-} Armure;
+} Armor;
 
-Armure *init_armure();
-Armure **init_list_armure(int size);
-Armure **add_armure(Armure **spell, Armure *new_spell, int pos);
-Armure *create_armure(char *name, float price, int protection, int equiped);
-Armure **inventory_armure();
+Armor *init_armor();
+Armor **init_list_armor(int size);
+Armor **add_armor(Armor **spell, Armor *new_spell, int pos);
+Armor *create_armor(char *name, float price, int protection, int equiped);
+Armor **inventory_armor();
