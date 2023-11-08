@@ -7,12 +7,15 @@
 
 typedef struct Monster {
     float health;
+    float max_health;
     int def;
     int attack_min;
     int attack_max;
     int current_attack;
     int type;
     int exp_drop;
+    int height;
+    char **sprite;
 } Monster;
 
 typedef struct Player {
