@@ -1,9 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "arme.h"
-#include "armure.h"
+#include <string.h>
+#include "weapon.h"
+#include "armor.h"
 #include "spell.h"
+#include "cli.h"
+
+#define SCREEN_WIDTH 195
+#define SCREEN_HEIGHT 15
+#define SPACE 10
+#define MONSTER_WIDTH 35
 
 typedef struct Monster {
     float health;
@@ -42,6 +49,11 @@ typedef struct Fight {
     int target;
     Monster *monsters;
 } Fight;
+
+void attributSpriteToMonster(Monster * monster);
+void displayMonster(Fight *fight);
+
+void attributSpriteToMonster(Monster *monster);
 void monster_attack(Monster *monster);
 void monster_defense(Monster *monster, Player *ply);
 int get_reward();

@@ -1,4 +1,4 @@
-#include "arme.h"
+#include "weapon.h"
 
 Weapon *init_weapon()
 {
