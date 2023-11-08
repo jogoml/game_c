@@ -1,4 +1,4 @@
-#include "armure.h"
+#include "armor.h"
 
 Armor *init_armor()
 {
