@@ -27,6 +27,39 @@ int getMap(Context* context)
     return 0;
 }
 
+void saveMap(Context *context){
+    FILE * f= fopen(context->nameMap, "w");
+    if(f == NULL)
+    {
+        return;
+    }
+    for (int i = 0;i < ROWS; i++)
+    {
+        for (int j = 0;j < COLUMNS; j++)
+        {
+            fputc(context->map[i][j],f);
+        }
+        fputc('\n',f);
+    }
+    fclose(f);
+}
+
+void restartMap(Context *context){
+    for (int i = 0; i < ROWS; i++)
+    {
+        for (int j = 0; j < COLUMNS; j++)
+        {
+            if(context->map[i][j] == 'F'){
+                context->map[i][j] = 'M';
+            }else if(context->map[i][j] == 'P'){
+                context->map[i][j] = 'B';
+            }
+        }
+        
+    }
+    saveMap(context);
+}
+
 void showMap(Context* context)
 {
     for (int i = 0; i < ROWS; i++)
@@ -58,7 +91,7 @@ void showMap(Context* context)
                     }else if (context->map[i][j] == 'O')
                     {
                         printf("X");
-                    }else if (context->map[i][j] == 'F')
+                    }else if (context->map[i][j] == 'F' || context->map[i][j] == 'P')
                     {
                         printf("\033[1;32mO");
                     }else if (context->map[i][j] == 'D')
@@ -76,4 +109,15 @@ void showMap(Context* context)
         }
         
     }
+
+    for (int i = 0; i < ROWS; i++)
+    {
+        for (int j = 0; j < COLUMNS; j++)
+        {
+            printf("%c", context->map[i][j]);
+        }
+        printf("\n");
+        
+    }
+    
 }
