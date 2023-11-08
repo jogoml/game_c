@@ -14,6 +14,7 @@
 
 typedef struct Player {
     char *name;
+    float max_health;
     float health;
     int def;
     int attack_min;
@@ -47,4 +48,7 @@ void displayPlayer(const Player *player);
 int search_player(Player *player);
 void free_player(Player *player);
 void save_player(Player *player);
+void save_armor(Player *ply);
+void save_weapon(Player *ply);
+
 #endif

@@ -338,3 +338,21 @@ Player *player_attack(Player *ply, Fight *fight, char key)
     return ply;
    
 }
+
+void save_armor(Player *ply)
+{
+    FILE * f = fopen("../saves/armors.txt", "w");
+    for (int i = 0; i < ply->nb_armure; i++) {
+        fprintf(f, "%s;%d;%f;%d\n", ply->armors[i]->name, ply->armors[i]->protection, ply->armors[i]->price, ply->armors[i]->equiped);
+    }
+    fclose(f);
+}
+
+void save_weapon(Player *ply)
+{
+    FILE * f = fopen("../saves/weapons.txt", "w");
+    for (int i = 0; i < ply->nb_arme; i++) {
+        fprintf(f, "%s;%d;%d;%d;%f;%d\n", ply->weapons[i]->name, ply->weapons[i]->attaqueMin, ply->weapons[i]->attaqueMax, ply->weapons[i]->attaquesParTour, ply->weapons[i]->price, ply->weapons[i]->equiped);
+    }
+    fclose(f);
+}

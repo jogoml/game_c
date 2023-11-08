@@ -37,6 +37,7 @@ void menu(Player *player)
     printf("1 - Commencer une nouvelle partie\n");
     if (playerExists) {
         printf("2 - Afficher les caractéristiques du personnage\n");
+        printf("3 - Continuer la partie\n");
     }
     printf("0 - Quitter le jeu\n");
     printf(" : ");
