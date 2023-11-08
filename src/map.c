@@ -57,7 +57,7 @@ void restartMap(Context *context){
         }
         
     }
-    
+    saveMap(context);
 }
 
 void showMap(Context* context)
