@@ -1,7 +1,7 @@
 #include "player.h"
 #include "monster.h"
 
-Player *init_player(const char *name)
+Player *init_player(char *name)
 {
     Player *ply = malloc(sizeof(Player));
     ply->name = malloc(sizeof(char) * strlen(name) + 1);
@@ -98,19 +98,33 @@ void createPlayer(Player *player) {
     }
 }
 
-void displayPlayer(const Player *player) {
-    printf("Nom : %s\n", player->name);
-    printf("Niveau : %d\n", player->level);
-    printf("Expérience : %d\n", player->exp);
-    printf("Santé : %f\n", player->health);
-    printf("Mana : %d\n", player->mana);
-    printf("Argent : %f\n", player->money);
-    printf("Attaque : %d\n", player->current_attack);
-    printf("Défense : %d\n", player->def);
-    printf("Nb attaque : %d\n", player->nb_attack);
-    printf("Nb arme : %d\n", player->nb_arme);
-    printf("Nb armure : %d\n", player->nb_armure);
-    printf("Nb sort : %d\n", player->nb_spell);
+void displayPlayer(Player *player) {
+    system ("/bin/stty raw");
+    while(1){
+        char c = fgetc(stdin);
+        if (c == 'Q' || c == 'q')
+        {
+            system ("/bin/stty cooked");
+            return;
+        }
+        system ("/bin/stty cooked");
+        clearScreen();
+        printf("Nom : %s\n", player->name);
+        printf("Niveau : %d\n", player->level);
+        printf("Expérience : %d\n", player->exp);
+        printf("Santé : %f\n", player->health);
+        printf("Mana : %d\n", player->mana);
+        printf("Argent : %f\n", player->money);
+        printf("Attaque : %d\n", player->current_attack);
+        printf("Défense : %d\n", player->def);
+        printf("Nb attaque : %d\n", player->nb_attack);
+        printf("Nb arme : %d\n", player->nb_arme);
+        printf("Nb armure : %d\n", player->nb_armure);
+        printf("Nb sort : %d\n", player->nb_spell);
+        printf("Q - Quitter\n");
+        system ("/bin/stty raw");
+        
+    }
 }
 
 int search_player(Player *player) {

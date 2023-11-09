@@ -4,9 +4,10 @@
 #include "utils.h"
 #include "map.h"
 #include "cli.h"
+#include "player.h"
 
-int eventLoop(Context *context);
+int eventLoop(Player *player, Context *context);
 
-int processUserInput(char userInput, Context* context);
+int processUserInput(char userInput, Context* context, Player* player);
 
 #endif

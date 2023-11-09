@@ -1,12 +1,12 @@
 #include "loop.h"
 
-int eventLoop(Context * context)
+int eventLoop(Player * player, Context * context)
 {
     system ("/bin/stty raw");
     while(1) 
     {
         char input = fgetc(stdin);
-        if(processUserInput(input,context) == 0) {
+        if(processUserInput(input,context, player) == 0) {
             system ("/bin/stty cooked");
             return 0;
         }
@@ -17,7 +17,7 @@ int eventLoop(Context * context)
     }
 }
 
-int processUserInput(char userInput, Context* context) 
+int processUserInput(char userInput, Context* context, Player * player) 
 {
     switch(userInput) {
         case 'z':

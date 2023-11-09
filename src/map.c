@@ -60,6 +60,17 @@ void restartMap(Context *context){
     saveMap(context);
 }
 
+void restartMaps(){
+    char *maps[1] = {"../saves/level1.map"};
+    for (int i = 0; i < 1; i++)
+    {
+        Context *context = malloc(sizeof(Context));
+        context->nameMap = maps[i];
+        getMap(context);
+        restartMap(context);
+    }
+}
+
 void showMap(Context* context)
 {
     for (int i = 0; i < ROWS; i++)

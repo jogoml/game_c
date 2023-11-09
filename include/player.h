@@ -34,7 +34,7 @@ typedef struct Player {
 } Player;
 
 
-Player *init_player(const char *name);
+Player *init_player(char *name);
 Player *reinit_player_info(Player *ply);
 Player *equip_weapon(Weapon *weapon, Player *ply);
 Player *equip_armor(Armor *armor, Player *ply);
@@ -44,7 +44,7 @@ int display_player_armor(Player *ply);
 int display_player_spell(Player *ply);
 
 void createPlayer(Player *player);
-void displayPlayer(const Player *player);
+void displayPlayer(Player *player);
 int search_player(Player *player);
 void free_player(Player *player);
 void save_player(Player *player);
