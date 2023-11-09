@@ -7,7 +7,7 @@ Player *init_player(const char *name)
     ply->name = malloc(sizeof(char) * strlen(name) + 1);
     ply->weapons = init_list_weapon(7);
     ply->armors = init_list_armor(7);
-    ply->spell = init_list_spell(7);
+    ply->spell = init_list_spell(9);
     ply->nb_arme = 0;
     ply->nb_armure = 0;
     ply->current_attack = 0;
@@ -210,7 +210,7 @@ int display_player_weapon(Player *ply)
     }
     printf("Quelle arme voulez-vous utiliser ?\n");
     for (int i = 0; i < ply->nb_arme; i++) {
-        printf("%d. Arme: %s\nAttaque Min: %d\nAttaque Max: %d\nNombre d'attaques par tour: %d\n",
+        printf("%d. Arme: %s\tAttaque Min: %d\tAttaque Max: %d\tNombre d'attaques par tour: %d\n",
         i+1, ply->weapons[i]->name, ply->weapons[i]->attaqueMin, ply->weapons[i]->attaqueMax, ply->weapons[i]->attaquesParTour);
     }
     return 1;
@@ -224,7 +224,7 @@ int display_player_armor(Player *ply)
     }
     printf("Quelle armure voulez-vous utiliser ?\n");
     for (int i = 0; i < ply->nb_arme; i++) {
-        printf("%d. Armure: %s\nProtection: %d\n",
+        printf("%d. Armure: %s\tProtection: %d\n",
         i + 1, ply->armors[i]->name, ply->armors[i]->protection);
     }
     return 1;
@@ -239,13 +239,13 @@ int display_player_spell(Player *ply)
     printf("Quel sort voulez-vous utiliser ?\n");
     for (int i = 0; i < ply->nb_spell; i++) {
         if (ply->spell[i]->type == OFFENSIVE)
-            printf("%d. Sort: %s\nType: Offense\nMana: %d\nDégat: %d\n", i + 1, ply->spell[i]->name,
+            printf("%d. Sort: %s\tType: Offense\tMana: %d\tDégat: %d\n", i + 1, ply->spell[i]->name,
             ply->spell[i]->mana_cost, ply->spell[i]->damage);
         if (ply->spell[i]->type == DEFENSE)
-            printf("%d. Sort: %s\nType: Défense\nMana: %d\nDéfense: %d\n", i + 1, ply->spell[i]->name,
+            printf("%d. Sort: %s\tType: Défense\tMana: %d\tDéfense: %d\n", i + 1, ply->spell[i]->name,
             ply->spell[i]->mana_cost, ply->spell[i]->def);
         if (ply->spell[i]->type == CARE)
-            printf("%d. Sort: %s\nType: Soin\nMana: %d\nSoin: %d\n", i + 1, ply->spell[i]->name,
+            printf("%d. Sort: %s\tType: Soin\tMana: %d\tSoin: %d\n", i + 1, ply->spell[i]->name,
             ply->spell[i]->mana_cost, ply->spell[i]->care);
     }
     return 1;
@@ -303,9 +303,7 @@ Player *player_attack(Player *ply, Fight *fight, char key)
         fight->target = (id-48)-1;
         srand((unsigned int)time(NULL));
         ply->current_attack = rand() % (ply->attack_max - ply->attack_min + 1) + ply->attack_min;
-        printf("attaque: %d\n", ply->current_attack);
         monster_defense(&fight->monsters[fight->target], ply);
-        printf("santé monstre: %f\n", fight->monsters[fight->target].health);
         ply->nb_attack--;
     }
     if (key == '2') {
