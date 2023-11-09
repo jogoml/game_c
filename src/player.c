@@ -65,8 +65,8 @@ void save_player(Player *player)
         fprintf(file, "Nb arme : %d\n", player->nb_arme);
         fprintf(file, "Nb armure : %d\n", player->nb_armure);
         fprintf(file, "Nb sort : %d\n", player->nb_spell);
-        fclose(file);
     }
+    fclose(file);
 }
 
 void createPlayer(Player *player) {
@@ -339,20 +339,143 @@ Player *player_attack(Player *ply, Fight *fight, char key)
    
 }
 
+void save_spell(Player *ply)
+{
+    FILE * f = fopen("../saves/spells.csv", "w");
+    if (f != NULL) {
+        fprintf(f,"nom_du_sort;type_sort;prix;level;degat;mana_cost;def;care\n");
+        for (int i = 0; i < ply->nb_spell; i++) {
+            if (ply->spell[i]->type == OFFENSIVE)
+                fprintf(f, "%s;OFFENSIVE;%f;%d;%d;%d;%d;%d\n", ply->spell[i]->name,  ply->spell[i]->price,  ply->spell[i]->level,
+                ply->spell[i]->damage, ply->spell[i]->mana_cost,  ply->spell[i]->def, ply->spell[i]->care);
+            else if (ply->spell[i]->type == DEFENSE)
+                fprintf(f, "%s;DEFENSE;%f;%d;%d;%d;%d;%d\n", ply->spell[i]->name,  ply->spell[i]->price,  ply->spell[i]->level,
+                ply->spell[i]->damage, ply->spell[i]->mana_cost,  ply->spell[i]->def, ply->spell[i]->care);
+            else if (ply->spell[i]->type == CARE)
+                fprintf(f, "%s;CARE;%f;%d;%d;%d;%d;%d\n", ply->spell[i]->name,  ply->spell[i]->price,  ply->spell[i]->level,
+                ply->spell[i]->damage, ply->spell[i]->mana_cost,  ply->spell[i]->def, ply->spell[i]->care);
+        }
+    }
+    fclose(f);
+}
+
 void save_armor(Player *ply)
 {
-    FILE * f = fopen("../saves/armors.txt", "w");
-    for (int i = 0; i < ply->nb_armure; i++) {
-        fprintf(f, "%s;%d;%f;%d\n", ply->armors[i]->name, ply->armors[i]->protection, ply->armors[i]->price, ply->armors[i]->equiped);
+    FILE * f = fopen("../saves/armors.csv", "w");
+    if (f != NULL) {
+        fprintf(f,"name;protection;price;equiped\n");
+        for (int i = 0; i < ply->nb_armure; i++) {
+            fprintf(f, "%s;%d;%f;%d\n", ply->armors[i]->name, ply->armors[i]->protection, ply->armors[i]->price, ply->armors[i]->equiped);
+        }
     }
     fclose(f);
 }
 
 void save_weapon(Player *ply)
 {
-    FILE * f = fopen("../saves/weapons.txt", "w");
-    for (int i = 0; i < ply->nb_arme; i++) {
-        fprintf(f, "%s;%d;%d;%d;%f;%d\n", ply->weapons[i]->name, ply->weapons[i]->attaqueMin, ply->weapons[i]->attaqueMax, ply->weapons[i]->attaquesParTour, ply->weapons[i]->price, ply->weapons[i]->equiped);
+    FILE * f = fopen("../saves/weapons.csv", "w");
+    if (f != NULL) {
+        fprintf(f,"name;attaqueMin;attaqueMin;attaquesParTour;price;equiped\n");
+        for (int i = 0; i < ply->nb_arme; i++) {
+            fprintf(f, "%s;%d;%d;%d;%f;%d\n", ply->weapons[i]->name, ply->weapons[i]->attaqueMin, ply->weapons[i]->attaqueMax, ply->weapons[i]->attaquesParTour, ply->weapons[i]->price, ply->weapons[i]->equiped);
+        }
     }
+    fclose(f);
+}
+
+void restor_weapons_player(Player *ply)
+{
+    Weapon **weapon = init_list_weapon(7);
+    char *name = malloc(sizeof(char) *50);
+    int attaque_min,attaque_max, nb_tour, equip;
+    float price;
+    FILE *f = fopen("../saves/weapons.csv", "r");
+    char c = fgetc(f);
+    int line = 1;
+    while(c != EOF) {
+        c = fgetc(f);
+        if(c == '\n') {
+            line++;
+        }
+    }
+    fclose(f);
+    f = fopen("../saves/weapons.csv", "r");
+
+    if (f != NULL) {
+        fgets(malloc(sizeof (char) * 100), 100, f);
+        for(int i = 0; i < line-1; i++) {
+            fscanf(f,"\n%[^;];%d;%d;%d;%f;%d", name, &attaque_min, &attaque_max, &nb_tour, &price, &equip);
+            ply->weapons[i] = create_weapon(name, price, attaque_max, attaque_min, nb_tour, equip);
+            printf("arme: %s\n",name);
+            ply->weapons = add_weapon(ply->weapons, ply->weapons[i], i);
+        }
+    }
+    free(name);
+    fclose(f);
+}
+
+void restor_armors_player(Player *ply)
+{
+    Armor *armor = malloc(sizeof(Armor));
+    char *name = malloc(sizeof(char) *50);
+    int protection, equip;
+    float price;
+    FILE *f = fopen("../saves/armors.csv", "r");
+    char c = fgetc(f);
+    int line = 1;
+    while(c != EOF) {
+        c = fgetc(f);
+        if(c == '\n') {
+            line++;
+        }
+    }
+    fclose(f);
+    f = fopen("../saves/armors.csv", "r");
+    if (f != NULL) {
+        fgets(malloc(sizeof (char) * 100), 100, f);
+        for(int i = 0; i < line; i++) {
+            fscanf(f,"\n%[^;];%d;%f;%d", name, &protection, &price, &equip);
+            ply->armors[i] = create_armor(name, price, protection, equip);
+            ply->armors = add_armor(ply->armors, ply->armors[i], i+1);
+        }
+    }
+    free(name);
+    fclose(f);
+}
+
+
+void restor_spells_player(Player *ply)
+{
+    char *name = malloc(sizeof(char) *50);
+    char *type = malloc(sizeof(char) *50);
+    int level,degat,mana_cost,def,care;
+    float price;
+    FILE *f = fopen("../saves/spells.csv", "r");
+    char c = fgetc(f);
+    int line = 1;
+    while(c != EOF) {
+        c = fgetc(f);
+        if(c == '\n') {
+            line++;
+        }
+    }
+    fclose(f);
+    f = fopen("../saves/spells.csv", "r");
+    fgets(malloc(sizeof (char) * 100), 100, f);
+    for(int i = 0; i < line-2; i++) {
+        fscanf(f,"\n%[^;];%[^;];%f;%d;%d;%d;%d;%d", name, type, &price, &level,&degat, &mana_cost, &def, &care);
+        if (strcmp("DEFENSE", type) == 0) {
+            ply->spell[i] = create_spell(name, DEFENSE, degat, def, mana_cost, price, level, care);
+            ply->spell = add_spell(ply->spell, ply->spell[i], i);
+        } else if (strcmp("OFFENSIVE", type) == 0) {
+            ply->spell[i] = create_spell(name, OFFENSIVE, degat, def, mana_cost, price, level, care);
+            ply->spell = add_spell(ply->spell, ply->spell[i], i);
+        }else if (strcmp("CARE", type) == 0) {
+            ply->spell[i] = create_spell(name, CARE, degat, def, mana_cost, price, level, care);
+            ply->spell = add_spell(ply->spell, ply->spell[i], i);
+        }
+    }
+    free(name);
+    free(type);
     fclose(f);
 }
