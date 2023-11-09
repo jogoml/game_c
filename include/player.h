@@ -50,5 +50,8 @@ void free_player(Player *player);
 void save_player(Player *player);
 void save_armor(Player *ply);
 void save_weapon(Player *ply);
-
+void save_spell(Player *ply);
+void restor_weapons_player(Player *ply);
+void restor_armors_player(Player *ply);
+void restor_spells_player(Player *ply);
 #endif
