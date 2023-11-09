@@ -1,8 +1,8 @@
 name;protection;price
-Robe d'Apprenti;1;0
-Cuir Léger;2;5
-Maille de Fer;3;7
-Armure d'Acier;4;8
-Armure du Dragon;5;9
-Armure Céleste;8;15
-Armure d'Excalibur;10;20
+Robe d'Apprenti;2;0
+Cuir Léger;4;15
+Maille de Fer;6;17
+Armure d'Acier;10;20
+Armure du Dragon;15;25
+Armure Céleste;18;27
+Armure d'Excalibur;20;30

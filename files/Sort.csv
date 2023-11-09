@@ -1,10 +1,10 @@
 nom_du_sort;type_sort;prix;level;degat;mana_cost;def;care
-Boule de Feu;OFFENSIVE;4;1;3;2;0;0
-Éclair Magique;OFFENSIVE;6;1;5;3;0;0
-Météore de Destruction;OFFENSIVE;4;3;10;5;0;0
-Bouclier de Protection;DEFENSE;4;1;0;2;2;0
-Barrière denergie;DEFENSE;5;1;0;2;5;0
-Forme de Pierre;DEFENSE;6;2;0;3;8;0
-Sort de Guérison;CARE;3;1;0;2;0;2
-Potion de Vie;CARE;5;1;0;3;0;4
-Réupération totale;CARE;5;1;0;0;0;10
+Boule de Feu;OFFENSIVE;10;1;3;5;0;0
+Éclair Magique;OFFENSIVE;16;1;5;10;0;0
+Météore de Destruction;OFFENSIVE;14;2;10;15;0;0
+Bouclier de Protection;DEFENSE;10;1;0;5;2;0
+Barrière denergie;DEFENSE;15;1;0;10;7;0
+Forme de Pierre;DEFENSE;20;2;0;15;8;0
+Sort de Guérison;CARE;13;1;0;5;0;5
+Potion de Vie;CARE;18;2;0;10;0;10
+Réupération totale;CARE;20;3;0;15;0;20
