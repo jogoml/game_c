@@ -44,27 +44,34 @@ void menu(Player *player, Context *context)
             printf("3 - Continuer la partie\n");
         }
         printf("0 - Quitter le jeu\n");
-        printf(" : ");
-        scanf("%d", &choice);
+        system ("/bin/stty raw");
+        char choice = fgetc(stdin);
+        system ("/bin/stty cooked");
         switch (choice) {
-            case 1:
+            case '1':
                 playerExists = search_player(player);
                 if (playerExists) {
-                    char confirm;
+                    clearScreen();
                     printf("Un personnage existe déjà. Voulez-vous le supprimer et commencer une nouvelle partie ? (O/N) : ");
-                    scanf(" %c", &confirm);
+                    system ("/bin/stty raw");
+                    char confirm = fgetc(stdin);
+                    system ("/bin/stty cooked");
                     if (confirm != 'O' && confirm != 'o') {
+                        getCurrentMap(context);
+                        playerExists = 1;
+                        getMap(context);
+                        eventLoop(player, context);
                         break;
-                    } 
+                    }else{
+                        restartMaps(context);
+                        createPlayer(player);
+                        setCurrentMap(context);
+                        getMap(context);
+                        launch_game(player, context);
+                    }
                 }
-                restartMap(context);
-                createPlayer(player);
-                playerExists = 1;
-                context->nameMap = "../saves/level1.map";
-                getMap(context);
-                launch_game(player, context);
                 break;
-            case 2:
+            case '2':
                 playerExists = search_player(player);
                 if (playerExists) {
                     clearScreen();
@@ -72,14 +79,19 @@ void menu(Player *player, Context *context)
                     displayPlayer(player);
                 }
                 break;
-            case 3:
+            case '3':
+                playerExists = 1;
+                getCurrentMap(context);
+                getMap(context);
                 eventLoop(player, context);
-            case 0:
+                break;
+            case '0':
+                return;
                 break;
             default:
             clearScreen();
                 printf("Option invalide. Réessayez.\n");
         }
         clearScreen();
-    } while (choice != 0);
+    } while (choice != '0');
 }

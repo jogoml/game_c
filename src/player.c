@@ -99,15 +99,15 @@ void createPlayer(Player *player) {
 }
 
 void displayPlayer(Player *player) {
-    system ("/bin/stty raw");
+    
     while(1){
+        system ("/bin/stty raw");
         char c = fgetc(stdin);
+        system ("/bin/stty cooked");
         if (c == 'Q' || c == 'q')
         {
-            system ("/bin/stty cooked");
             return;
         }
-        system ("/bin/stty cooked");
         clearScreen();
         printf("Nom : %s\n", player->name);
         printf("Niveau : %d\n", player->level);
@@ -122,7 +122,6 @@ void displayPlayer(Player *player) {
         printf("Nb armure : %d\n", player->nb_armure);
         printf("Nb sort : %d\n", player->nb_spell);
         printf("Q - Quitter\n");
-        system ("/bin/stty raw");
         
     }
 }

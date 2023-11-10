@@ -2,23 +2,29 @@
 
 int eventLoop(Player * player, Context * context)
 {
-    system ("/bin/stty raw");
+    clearScreen();
+    showMap(context);
     while(1) 
     {
+        system ("/bin/stty raw");
         char input = fgetc(stdin);
+        system ("/bin/stty cooked");
         if(processUserInput(input,context, player) == 0) {
-            system ("/bin/stty cooked");
             return 0;
         }
-        system ("/bin/stty cooked");
         clearScreen();
         showMap(context);
-        system ("/bin/stty raw");
     }
 }
 
 int processUserInput(char userInput, Context* context, Player * player) 
 {
+    if (context->map == NULL)
+    {
+        printf("Aucune carte chargée\n");
+        return 1;
+    }
+    
     switch(userInput) {
         case 'z':
             if(!(context->y-1<0 || context->map[context->y-1][context->x]=='O' || context->map[context->y-1][context->x]=='N')){
