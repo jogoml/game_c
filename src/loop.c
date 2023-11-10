@@ -1,27 +1,39 @@
 #include "loop.h"
 
-int eventLoop(Context * context)
+int eventLoop(Player * player, Context * context)
 {
-    system ("/bin/stty raw");
+    clearScreen();
+    showMap(context);
     while(1) 
     {
+        system ("/bin/stty raw");
         char input = fgetc(stdin);
-        if(processUserInput(input,context) == 0) {
-            system ("/bin/stty cooked");
+        system ("/bin/stty cooked");
+        if(processUserInput(input,context, player) == 0) {
             return 0;
         }
-        system ("/bin/stty cooked");
         clearScreen();
         showMap(context);
-        system ("/bin/stty raw");
     }
 }
 
-int processUserInput(char userInput, Context* context) 
+int processUserInput(char userInput, Context* context, Player * player) 
 {
+    if (context->map == NULL)
+    {
+        printf("Aucune carte chargée\n");
+        return 1;
+    }
+    
     switch(userInput) {
         case 'z':
             if(!(context->y-1<0 || context->map[context->y-1][context->x]=='O' || context->map[context->y-1][context->x]=='N')){
+                if(fight(player) == 0) {
+                    endGame(context, player, 0);
+                    return 0;
+                }
+                player->exp += 10;
+                verify_exp(player);
                 context->y-=1;
                 if(context->map[context->y][context->x]=='M'){
                     context->map[context->y][context->x]='F';
@@ -34,6 +46,12 @@ int processUserInput(char userInput, Context* context)
             break;
         case 'd':
             if(!(context->x+1>ROWS || context->map[context->y][context->x+1]=='O' || context->map[context->y][context->x+1]=='N')){
+                if(fight(player) == 0) {
+                    endGame(context, player, 0);
+                    return 0;
+                }
+                player->exp += 10;
+                verify_exp(player);
                 context->x+=1;
                 if(context->map[context->y][context->x]=='M'){
                     context->map[context->y][context->x]='F';
@@ -46,6 +64,12 @@ int processUserInput(char userInput, Context* context)
             break;
         case 's':
             if(!(context->y+1>COLUMNS || context->map[context->y+1][context->x]=='O' || context->map[context->y+1][context->x]=='N')){
+                if(fight(player) == 0) {
+                    endGame(context, player, 0);
+                    return 0;
+                }
+                player->exp += 10;
+                verify_exp(player);
                 context->y+=1;
                 if(context->map[context->y][context->x]=='M'){
                     context->map[context->y][context->x]='F';
@@ -59,6 +83,12 @@ int processUserInput(char userInput, Context* context)
             break;
         case 'q':
             if(!(context->x-1<0 || context->map[context->y][context->x-1]=='O' || context->map[context->y][context->x-1]=='N')){
+                if(fight(player) == 0) {
+                    endGame(context, player, 0);
+                    return 0;
+                }
+                player->exp += 10;
+                verify_exp(player);
                 context->x-=1;
                 if(context->map[context->y][context->x]=='M'){
                     context->map[context->y][context->x]='F';
@@ -70,12 +100,19 @@ int processUserInput(char userInput, Context* context)
             }
             
             break;
-        case 'S':
+        case 'p':
+            // menu pause
+            break;
+        case 'i':
+            displayPlayer(player);
             break;
         case 'Q':
             // exits program
             return 0;
     }
+    save_player(player);
+    save_armor(player);
+    save_weapon(player);
 
     return 1;
 

@@ -1,7 +1,19 @@
 #include "map.h"
+char *maps[1] = {"../saves/level1.map"};
+int nbMaps = 1;
 
 int getMap(Context* context)
 {
+    if(context->map != NULL)
+    {
+        for (int i = 0; i < ROWS; i++)
+        {
+            free(context->map[i]);
+        }
+        free(context->map);
+    }
+    printf("%s\n", context->nameMap);
+    printf("%ld\n",strlen(context->nameMap));
     context->map = malloc(sizeof(char *)*ROWS);
     if(context->map == NULL)
     {
@@ -23,6 +35,7 @@ int getMap(Context* context)
         }
         fgetc(f);
     }
+    fscanf(f, "%d %d", &context->x, &context->y);
     fclose(f);
     return 0;
 }
@@ -41,6 +54,7 @@ void saveMap(Context *context){
         }
         fputc('\n',f);
     }
+    fprintf(f, "%d %d", context->x, context->y);
     fclose(f);
 }
 
@@ -53,6 +67,9 @@ void restartMap(Context *context){
                 context->map[i][j] = 'M';
             }else if(context->map[i][j] == 'P'){
                 context->map[i][j] = 'B';
+            }else if(context->map[i][j] == 'D'){
+                context->x = j;
+                context->y = i;
             }
         }
         
@@ -60,8 +77,61 @@ void restartMap(Context *context){
     saveMap(context);
 }
 
+void restartMaps(Context *context){
+    for (int i = 0; i < nbMaps; i++)
+    {
+        Context *ctx = malloc(sizeof(Context));
+        ctx->nameMap = maps[i];
+        getMap(ctx);
+        restartMap(ctx);
+        free(ctx);
+    }
+    context->nameMap = malloc(sizeof(char)*100);
+    strcpy(context->nameMap, "../saves/level1.map");
+}
+
+void getCurrentMap(Context *context){
+    FILE * f= fopen("../saves/currentMap", "r");
+    if(f == NULL)
+    {
+        return;
+    }
+    context->nameMap = malloc(sizeof(char)*100);
+    fscanf(f, "%s", context->nameMap);
+    fclose(f);
+}
+
+void setCurrentMap(Context *context){
+    FILE * f= fopen("../saves/currentMap", "w");
+    if(f == NULL)
+    {
+        return;
+    }
+    fprintf(f, "%s", context->nameMap);
+    fclose(f);
+}
+
+void nextMap(Context *context, Player *player){
+    for (int i = 0; i < nbMaps; i++)
+    {
+        if(strcmp(context->nameMap, maps[i]) == 0){
+            if(i+1 < nbMaps){
+                context->nameMap = maps[i+1];
+                getMap(context);
+                setCurrentMap(context);
+                return;
+            }
+        }
+        else {
+            endGame(context, player, 1);
+        }
+    }
+    
+}
+
 void showMap(Context* context)
 {
+    printf("Quitter : Q(Maj)                    Menu : p                    Inventaire : i                    Move : zqsd\n");
     for (int i = 0; i < ROWS; i++)
     {
         for(int k = 0; k < 3; k++)
@@ -109,7 +179,12 @@ void showMap(Context* context)
         }
         
     }
-
+    if (context->map == NULL)
+    {
+        printf("ALED NO MAP\n");
+        return;
+    }
+    
     for (int i = 0; i < ROWS; i++)
     {
         for (int j = 0; j < COLUMNS; j++)
