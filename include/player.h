@@ -10,29 +10,32 @@
 #include "weapon.h"
 #include "armor.h"
 #include "spell.h"
-#include "cli.h"
+
 
 typedef struct Player {
     char *name;
-    float max_health;
+    int level;
+    int exp;
+    int exp_next;
     float health;
+    float max_health;
+    int mana;
+    float money;
+    int current_attack;
     int def;
     int attack_min;
     int attack_max;
-    int current_attack;
-    int mana;
     int nb_attack;
-    float money;
-    int exp;
     int nb_arme;
     int nb_armure;
     int nb_spell;
-    int level;
+    
     Weapon **weapons;
     Armor **armors;
     Spell **spell;
 } Player;
 
+#include "cli.h"
 
 Player *init_player(char *name);
 Player *reinit_player_info(Player *ply);
@@ -42,6 +45,8 @@ Weapon *get_player_current_weapon(Player *ply);
 Armor *get_player_current_armor(Player *ply);
 int display_player_armor(Player *ply);
 int display_player_spell(Player *ply);
+
+int fight(Player *ply);
 
 void createPlayer(Player *player);
 void displayPlayer(Player *player);

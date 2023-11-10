@@ -28,6 +28,12 @@ int processUserInput(char userInput, Context* context, Player * player)
     switch(userInput) {
         case 'z':
             if(!(context->y-1<0 || context->map[context->y-1][context->x]=='O' || context->map[context->y-1][context->x]=='N')){
+                if(fight(player) == 0) {
+                    endGame(context, player, 0);
+                    return 0;
+                }
+                player->exp += 10;
+                verify_exp(player);
                 context->y-=1;
                 if(context->map[context->y][context->x]=='M'){
                     context->map[context->y][context->x]='F';
@@ -40,6 +46,12 @@ int processUserInput(char userInput, Context* context, Player * player)
             break;
         case 'd':
             if(!(context->x+1>ROWS || context->map[context->y][context->x+1]=='O' || context->map[context->y][context->x+1]=='N')){
+                if(fight(player) == 0) {
+                    endGame(context, player, 0);
+                    return 0;
+                }
+                player->exp += 10;
+                verify_exp(player);
                 context->x+=1;
                 if(context->map[context->y][context->x]=='M'){
                     context->map[context->y][context->x]='F';
@@ -52,6 +64,12 @@ int processUserInput(char userInput, Context* context, Player * player)
             break;
         case 's':
             if(!(context->y+1>COLUMNS || context->map[context->y+1][context->x]=='O' || context->map[context->y+1][context->x]=='N')){
+                if(fight(player) == 0) {
+                    endGame(context, player, 0);
+                    return 0;
+                }
+                player->exp += 10;
+                verify_exp(player);
                 context->y+=1;
                 if(context->map[context->y][context->x]=='M'){
                     context->map[context->y][context->x]='F';
@@ -65,6 +83,12 @@ int processUserInput(char userInput, Context* context, Player * player)
             break;
         case 'q':
             if(!(context->x-1<0 || context->map[context->y][context->x-1]=='O' || context->map[context->y][context->x-1]=='N')){
+                if(fight(player) == 0) {
+                    endGame(context, player, 0);
+                    return 0;
+                }
+                player->exp += 10;
+                verify_exp(player);
                 context->x-=1;
                 if(context->map[context->y][context->x]=='M'){
                     context->map[context->y][context->x]='F';
@@ -76,12 +100,19 @@ int processUserInput(char userInput, Context* context, Player * player)
             }
             
             break;
-        case 'S':
+        case 'p':
+            // menu pause
+            break;
+        case 'i':
+            displayPlayer(player);
             break;
         case 'Q':
             // exits program
             return 0;
     }
+    save_player(player);
+    save_armor(player);
+    save_weapon(player);
 
     return 1;
 

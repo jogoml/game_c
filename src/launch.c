@@ -32,10 +32,11 @@ void menu(Player *player, Context *context)
     int playerExists = 0;
     int choice;
     player = (Player *)malloc(sizeof(Player));
-    playerExists = search_player(player);
+    
     clearScreen();
     do
     {
+        playerExists = search_player(player);
         printf("Bienvenue dans le jeu!\n");
         printf("\nMenu :\n");
         printf("1 - Commencer une nouvelle partie\n");
@@ -62,14 +63,13 @@ void menu(Player *player, Context *context)
                         getMap(context);
                         eventLoop(player, context);
                         break;
-                    }else{
-                        restartMaps(context);
-                        createPlayer(player);
-                        setCurrentMap(context);
-                        getMap(context);
-                        launch_game(player, context);
                     }
                 }
+                restartMaps(context);
+                createPlayer(player);
+                setCurrentMap(context);
+                getMap(context);
+                launch_game(player, context);
                 break;
             case '2':
                 playerExists = search_player(player);

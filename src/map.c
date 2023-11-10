@@ -1,4 +1,6 @@
 #include "map.h"
+char *maps[1] = {"../saves/level1.map"};
+int nbMaps = 1;
 
 int getMap(Context* context)
 {
@@ -76,8 +78,7 @@ void restartMap(Context *context){
 }
 
 void restartMaps(Context *context){
-    char *maps[1] = {"../saves/level1.map"};
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < nbMaps; i++)
     {
         Context *ctx = malloc(sizeof(Context));
         ctx->nameMap = maps[i];
@@ -110,8 +111,27 @@ void setCurrentMap(Context *context){
     fclose(f);
 }
 
+void nextMap(Context *context, Player *player){
+    for (int i = 0; i < nbMaps; i++)
+    {
+        if(strcmp(context->nameMap, maps[i]) == 0){
+            if(i+1 < nbMaps){
+                context->nameMap = maps[i+1];
+                getMap(context);
+                setCurrentMap(context);
+                return;
+            }
+        }
+        else {
+            endGame(context, player, 1);
+        }
+    }
+    
+}
+
 void showMap(Context* context)
 {
+    printf("Quitter : Q(Maj)                    Menu : p                    Inventaire : i                    Move : zqsd\n");
     for (int i = 0; i < ROWS; i++)
     {
         for(int k = 0; k < 3; k++)

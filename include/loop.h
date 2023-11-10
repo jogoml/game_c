@@ -5,6 +5,7 @@
 #include "map.h"
 #include "cli.h"
 #include "player.h"
+#include "exp.h"
 
 int eventLoop(Player *player, Context *context);
 
