@@ -11,5 +11,6 @@ void verify_exp(Player *player)
         player->mana += 10;
         player->attack_min += 2;
         player->attack_max += 2;
+        player->money += 3*player->level;
     }
 }
