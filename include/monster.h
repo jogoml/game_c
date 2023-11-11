@@ -47,6 +47,8 @@ int get_reward_type();
 void monster_death(Monster *monster, Player *ply);
 int exist_armor(Player *ply, int id);
 int exist_weapon(Player *ply, int id);
+int fights(Fight *fight, Player *ply);
+int nb_death_monster(Fight *fight);
 
 Player *use_spell(Player *ply, int key, Fight *fight);
 Player *player_defense(Player *ply, Fight *fight);
