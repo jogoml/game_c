@@ -1,7 +1,7 @@
 #include "player.h"
 #include "monster.h"
 
-Player *init_player(const char *name)
+Player *init_player(char *name)
 {
     Player *ply = malloc(sizeof(Player));
     ply->name = malloc(sizeof(char) * strlen(name) + 1);
@@ -11,23 +11,31 @@ Player *init_player(const char *name)
     ply->nb_arme = 0;
     ply->nb_armure = 0;
     ply->current_attack = 0;
-    ply->health = 100;
     ply->money = 100;
     ply->mana = 50;
+    ply->level = 1;
     ply->exp = 0;
+    ply->exp_next = 100;
+    ply->health = 100;
+    ply->max_health = 100;
+    ply->def = 0;
+    ply->attack_min = 0;
+    ply->attack_max = 0;
     ply->nb_attack = 0;
     ply->nb_spell = 0;
-    ply->level = 1;
     strcpy(ply->name, name);
+    save_player(ply);
 
     Weapon *weapon = create_weapon("épée en bois",15, 5, 1, 2, 0);
     ply->weapons = add_weapon(ply->weapons, weapon, ply->nb_arme);
     ply->nb_arme++;
+    get_player_current_weapon(ply);
     equip_weapon(weapon, ply);
 
     Armor *armor = create_armor("Robe d'Apprenti", 0, 2, 0);
     ply->armors = add_armor(ply->armors, armor, ply->nb_armure);
     ply->nb_armure++;
+    get_player_current_armor(ply);
     equip_armor(armor, ply);
 
     return ply;
@@ -55,9 +63,11 @@ void save_player(Player *player)
         fprintf(file, "Nom : %s\n", player->name);
         fprintf(file, "Niveau : %d\n", player->level);
         fprintf(file, "Expérience : %d\n", player->exp);
-        fprintf(file, "Santé : %f\n", player->health);
+        fprintf(file, "Exp next : %d\n", player->exp_next);
+        fprintf(file, "Santé : %.1f\n", player->health);
+        fprintf(file, "Santer max : %.1f\n", player->max_health);
         fprintf(file, "Mana : %d\n", player->mana);
-        fprintf(file, "Argent : %f\n", player->money);
+        fprintf(file, "Argent : %.2f\n", player->money);
         fprintf(file, "Attaque : %d\n", player->current_attack);
         fprintf(file, "Défense : %d\n", player->def);
         fprintf(file, "Attaque Min : %d\n", player->attack_min);
@@ -71,6 +81,7 @@ void save_player(Player *player)
 }
 
 void createPlayer(Player *player) {
+    clearScreen();
     char name[50] = "";
     while (strlen(name) == 0 || name == "\n") {
         printf("Entrez le nom du personnage : ");
@@ -82,9 +93,11 @@ void createPlayer(Player *player) {
         fprintf(file, "Nom : %s\n", player->name);
         fprintf(file, "Niveau : %d\n", player->level);
         fprintf(file, "Expérience : %d\n", player->exp);
-        fprintf(file, "Santé : %f\n", player->health);
+        fprintf(file, "Exp next : %d\n", player->exp_next);
+        fprintf(file, "Santé : %.1f\n", player->health);
+        fprintf(file, "Santer max : %.1f\n", player->max_health);
         fprintf(file, "Mana : %d\n", player->mana);
-        fprintf(file, "Argent : %f\n", player->money);
+        fprintf(file, "Argent : %.2f\n", player->money);
         fprintf(file, "Attaque : %d\n", player->current_attack);
         fprintf(file, "Défense : %d\n", player->def);
         fprintf(file, "Attaque Min : %d\n", player->attack_min);
@@ -93,25 +106,52 @@ void createPlayer(Player *player) {
         fprintf(file, "Nb arme : %d\n", player->nb_arme);
         fprintf(file, "Nb armure : %d\n", player->nb_armure);
         fprintf(file, "Nb sort : %d\n", player->nb_spell);
+
         fclose(file);
     } else {
         printf("Impossible d'enregistrer le personnage dans le fichier.\n");
     }
 }
 
-void displayPlayer(const Player *player) {
+void displayPlayer(Player *player) {
+    clearScreen();
     printf("Nom : %s\n", player->name);
     printf("Niveau : %d\n", player->level);
-    printf("Expérience : %d\n", player->exp);
-    printf("Santé : %f\n", player->health);
+    printf("Expérience : %d/%d\n", player->exp, player->exp_next);
+    printf("Santé : %.1f\n", player->max_health);
     printf("Mana : %d\n", player->mana);
-    printf("Argent : %f\n", player->money);
+    printf("Argent : %.2f\n", player->money);
     printf("Attaque : %d\n", player->current_attack);
     printf("Défense : %d\n", player->def);
     printf("Nb attaque : %d\n", player->nb_attack);
     printf("Nb arme : %d\n", player->nb_arme);
     printf("Nb armure : %d\n", player->nb_armure);
     printf("Nb sort : %d\n", player->nb_spell);
+    printf("Q - Quitter\n");
+    while(1){
+        system ("/bin/stty raw");
+        char c = fgetc(stdin);
+        system ("/bin/stty cooked");
+        if (c == 'Q' || c == 'q')
+        {
+            return;
+        }
+        clearScreen();
+        printf("Nom : %s\n", player->name);
+        printf("Niveau : %d\n", player->level);
+        printf("Expérience : %d/%d\n", player->exp, player->exp_next);
+        printf("Santé : %.1f\n", player->max_health);
+        printf("Mana : %d\n", player->mana);
+        printf("Argent : %.2f\n", player->money);
+        printf("Attaque : %d\n", player->current_attack);
+        printf("Défense : %d\n", player->def);
+        printf("Nb attaque : %d\n", player->nb_attack);
+        printf("Nb arme : %d\n", player->nb_arme);
+        printf("Nb armure : %d\n", player->nb_armure);
+        printf("Nb sort : %d\n", player->nb_spell);
+        printf("Q - Quitter\n");
+        
+    }
 }
 
 int search_player(Player *player) {
@@ -131,7 +171,9 @@ int search_player(Player *player) {
             }
             fscanf(file, "Niveau : %d\n", &player->level);
             fscanf(file, "Expérience : %d\n", &player->exp);
+            fscanf(file, "Exp next : %d\n", &player->exp_next);
             fscanf(file, "Santé : %f\n", &player->health);
+            fscanf(file, "Santer max : %f\n", &player->max_health);
             fscanf(file, "Mana : %d\n", &player->mana);
             fscanf(file, "Argent : %f\n", &player->money);
             fscanf(file, "Attaque : %d\n", &player->current_attack);
@@ -491,4 +533,9 @@ void restor_spells_player(Player *ply)
     free(name);
     free(type);
     fclose(f);
+}
+
+int fight(Player * player){
+    printf("Vous êtes attaqué par un monstre !\n");
+    return 1;
 }

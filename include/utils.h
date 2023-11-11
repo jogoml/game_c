@@ -7,7 +7,7 @@
 #define COLUMNS 5
 
 
-typedef struct {
+typedef struct Context{
     int x;
     int y;
     char* nameMap;

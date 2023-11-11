@@ -6,8 +6,7 @@
 #include "map.h"
 #include "player.h"
 #include "monster.h"
-#include "launch_game.h"
 #include "magasin.h"
-//#include "display_monster.h"
+#include "launch.h"
 
 #endif
