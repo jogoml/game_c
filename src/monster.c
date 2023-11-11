@@ -112,8 +112,9 @@ void displayMonster(Fight *fight) {
 
 void monster_attack(Monster *monster)
 {
+    srand(time(NULL));
+
     if (monster->health > 0) {
-        srand((unsigned int)time(NULL));
         monster->current_attack = rand() % (monster->attack_max - monster->attack_min + 1) + monster->attack_min;
     }
 }
@@ -211,6 +212,50 @@ void monster_death(Monster *monster, Player *ply)
             ply->mana += mana;
             printf("Vous avez obtenue %d mana en plus !\n", mana);
         }
+        monster->health = -1;
     }
 }
 
+int nb_death_monster(Fight *fight)
+{
+    int nb = fight->nbMonsters;
+    for (int i = 0; i < fight->nbMonsters; i++) {
+        if (fight->monsters[i].health == -1) {
+            nb--;
+        }
+    }
+    if (nb == 0)
+        return 1;
+    return 0;
+}
+int fights(Fight *fight, Player *ply)
+{
+    int nb = fight->nbMonsters;
+    while (1) {
+        while (ply->nb_attack > 0) {
+            if (nb_death_monster(fight) == 1)
+                break;
+            printf("pv %s %f, mana %d\n",ply->name, ply->health, ply->mana);
+            Weapon *ply_weapon = get_player_current_weapon(ply);
+            printf("Il vous reste encore %d attaques à effectuer\nQuelle action voulez-vous effectuer ? Souhaitez-vous:\n", ply->nb_attack);
+            printf("1- Attaquer avec votre arme %s ?\n2- Utiliser un sort?\n3- Changer votre arme?\n4- Changer d'armure?\n", ply_weapon->name);
+            int key = 0;
+            scanf("%d", &key);
+            while (key < 1 || key > 4) {
+                scanf("%d", &key);
+            }
+            player_attack(ply, fight, key);
+            for (int i = 0; i < fight->nbMonsters; i++) {
+                if (fight->monsters[i].health == -1) {
+                    continue;
+                }
+                monster_death(&fight->monsters[i], ply);
+                printf("pv monstre %d: %f\n", i + 1, fight->monsters[i].health);                
+            }
+            }
+            if (player_defense(ply, fight) == NULL)
+                return 0;
+            reinit_player_info(ply);
+        }
+    return 1;
+}
