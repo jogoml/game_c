@@ -1,5 +1,6 @@
 #include "loop.h"
-
+char dieu[] = "DIEU";
+int count = 0;
 int eventLoop(Player * player, Context * context)
 {
     while(1) 
@@ -24,6 +25,21 @@ int processUserInput(char userInput, Context* context, Player * player)
     {
         printf("Aucune carte chargée\n");
         return 1;
+    }
+    if(userInput == dieu[count]){
+        count++;
+        if(count == 4){
+            player->mana = 999999;
+            player->max_health = 999999;
+            player->level = 999999;
+            player->exp = 999999;
+            player->exp_next = 999999;
+            player->money = 999999;
+            player->health = player->max_health;
+            count = 0;
+        }
+    }else{
+        count = 0;
     }
     
     switch(userInput) {
@@ -50,7 +66,8 @@ int processUserInput(char userInput, Context* context, Player * player)
                     }
                     player->exp += 10;
                     verify_exp(player);
-                    player->health += player->max_health>player->health+10?player->health+10:player->max_health;
+                    player->health = player->max_health>player->health+10?player->health+10:player->max_health;
+                    player->mana += 10;
                     if (is_boss ==1){
                         nextMap(context,player);
                     }
@@ -93,7 +110,8 @@ int processUserInput(char userInput, Context* context, Player * player)
                     }
                     player->exp += 10;
                     verify_exp(player);
-                    player->health += player->max_health>player->health+10?player->health+10:player->max_health;
+                    player->health = player->max_health>player->health+10?player->health+10:player->max_health;
+                    player->mana += 10;
                     if (is_boss ==1){
                         nextMap(context,player);
                     }
@@ -136,7 +154,8 @@ int processUserInput(char userInput, Context* context, Player * player)
                     }
                     player->exp += 10;
                     verify_exp(player);
-                    player->health += player->max_health>player->health+10?player->health+10:player->max_health;
+                    player->health = player->max_health>player->health+10?player->health+10:player->max_health;
+                    player->mana += 10;
                     if (is_boss ==1){
                         nextMap(context,player);
                     }
@@ -180,7 +199,8 @@ int processUserInput(char userInput, Context* context, Player * player)
                     }
                     player->exp += 10;
                     verify_exp(player);
-                    player->health += player->max_health>player->health+10?player->health+10:player->max_health;
+                    player->health = player->max_health>player->health+10?player->health+10:player->max_health;
+                    player->mana += 10;
                     if (is_boss ==1){
                         nextMap(context,player);
                     }

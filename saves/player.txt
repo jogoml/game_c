@@ -1,18 +1,18 @@
-Nom : efefc
-Niveau : 1
-Expérience : 0
-Exp next : 100
-Santé : 100.0
-Santer max : 100.0
-Mana : 50
-Argent : 100.00
-Attaque : 0
-Défense : 2
-Attaque Min : 1
-Attaque Max : 5
-Nb attaque : 2
-Nb arme : 1
-Nb armure : 1
-Nb sort : 0
-Difficulté : 1
+Nom : zferfer
+Niveau : 1000000
+Expérience : 67
+Exp next : 1500000
+Santé : 120.0
+Santer max : 1000009.0
+Mana : 1000045
+Argent : 4000049.00
+Attaque : 24
+Défense : 20
+Attaque Min : 24
+Attaque Max : 34
+Nb attaque : 7
+Nb arme : 5
+Nb armure : 4
+Nb sort : 1
+Difficulté : 3
 Count : 0

@@ -171,7 +171,7 @@ int get_reward_type()
 int exist_armor(Player *ply, int id)
 {
     for (int i = 0; i < ply->nb_armure; i++) {
-        if (ply->armors[i]->name == ply->armors[id]->name)
+        if (strcmp(ply->armors[i]->name,ply->armors[id]->name)==0)
             return 1;
     }
     return 0;
@@ -180,7 +180,7 @@ int exist_armor(Player *ply, int id)
 int exist_weapon(Player *ply, int id)
 {
     for (int i = 0; i < ply->nb_arme; i++) {
-        if (ply->weapons[i]->name == ply->weapons[id]->name)
+        if (strcmp(ply->weapons[i]->name,ply->weapons[id]->name)==0)
             return 1;
     }
     return 0;
@@ -340,7 +340,7 @@ int fights(Fight *fight, Player *ply)
             if (nb_death_monster(fight) == 1){
                 return 1;
             }
-            printf("pv %s\033[1;31m %.2f\033[0m, mana \033[0;34m%d\033[0m\n\n",ply->name, ply->health, ply->mana);
+            printf("pv %s\033[1;31m %.2f\033[0m, mana \033[0;34m%d\033[0m, defense \033[0;33m%d\033[0m\n\n",ply->name, ply->health, ply->mana, ply->def);
             Weapon *ply_weapon = get_player_current_weapon(ply);
             if (ply_weapon == NULL)
             {

@@ -1,2 +1,6 @@
 name;attaqueMin;attaqueMax;attaquesParTour;price;equiped
-épée en bois;1;5;2;15.000000;1
+épée en bois;1;5;2;15.000000;0
+épée en acier;3;8;3;27.000000;0
+Escalibur;20;30;9;55.000000;1
+Escalibur;20;30;9;55.000000;0
+Fusil;14;25;7;40.000000;0

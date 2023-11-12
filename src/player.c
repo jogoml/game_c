@@ -11,7 +11,7 @@ Player *init_player(char *name, Player *ply)
     ply->nb_arme = 0;
     ply->nb_armure = 0;
     ply->current_attack = 0;
-    ply->money = 100;
+    ply->money = 20;
     ply->mana = 50;
     ply->level = 1;
     ply->exp = 0;
@@ -328,12 +328,12 @@ int display_player_weapon(Player *ply)
 
 int display_player_armor(Player *ply)
 {
-    if (ply->nb_arme == 0) {
+    if (ply->nb_armure == 0) {
         printf("Vous ne possédez aucune armure !\n");
         return 0;
     }
     printf("Quelle armure voulez-vous utiliser ?\n");
-    for (int i = 0; i < ply->nb_arme; i++) {
+    for (int i = 0; i < ply->nb_armure; i++) {
         printf("%d. Armure: %s\tProtection: %d\n",
         i + 1, ply->armors[i]->name, ply->armors[i]->protection);
     }
