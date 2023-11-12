@@ -10,13 +10,18 @@ X : Obstacle
 zqsd pour bouger
 
 ## COMMENT INSTALLER : 
-- Avoir cmake
+ - Avoir cmake
 
 puis lancer ces commandes:
-mkdir build
-cd build/
+
+mkdir build  
+
+cd build/  
+
 cmake ..
+
 make
+
 ./game_c
 
 Et amusez vous
