@@ -2,10 +2,10 @@
 
 int eventLoop(Player * player, Context * context)
 {
-    clearScreen();
-    showMap(context);
     while(1) 
     {
+        clearScreen();
+        showMap(context);
         system ("/bin/stty raw");
         char input = fgetc(stdin);
         system ("/bin/stty cooked");
@@ -102,17 +102,19 @@ int processUserInput(char userInput, Context* context, Player * player)
             break;
         case 'p':
             // menu pause
+            if(in_game_menu(player, context) == 0){
+                return 0;
+            }
             break;
         case 'i':
             displayPlayer(player);
             break;
         case 'Q':
-            // exits program
             return 0;
     }
     save_player(player);
-    save_armor(player);
-    save_weapon(player);
+    //save_armor(player);
+    //save_weapon(player);
 
     return 1;
 

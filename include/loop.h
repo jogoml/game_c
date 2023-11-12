@@ -6,9 +6,10 @@
 #include "cli.h"
 #include "player.h"
 #include "exp.h"
+#include "launch.h"
 
 int eventLoop(Player *player, Context *context);
 
-int processUserInput(char userInput, Context* context, Player* player);
+int processUserInput(char userInput, Context* context, Player * player);
 
 #endif
