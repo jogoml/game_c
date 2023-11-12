@@ -31,6 +31,7 @@ Player *init_player(char *name, Player *ply)
     Weapon *weapon = create_weapon("épée en bois",15, 5, 1, 2, 0);
     ply->weapons = add_weapon(ply->weapons, weapon, ply->nb_arme);
     ply->nb_arme++;
+    save_weapon(ply);
     get_player_current_weapon(ply);
     equip_weapon(weapon, ply);
     save_weapon(ply);
@@ -38,6 +39,7 @@ Player *init_player(char *name, Player *ply)
     Armor *armor = create_armor("Robe d'Apprenti", 0, 2, 0);
     ply->armors = add_armor(ply->armors, armor, ply->nb_armure);
     ply->nb_armure++;
+    save_armor(ply);
     get_player_current_armor(ply);
     equip_armor(armor, ply);
     save_armor(ply);
@@ -250,7 +252,6 @@ int search_player(Player *player) {
             restor_armors_player(player);
             restor_spells_player(player);
             restor_weapons_player(player);
-
             return 1;
         }
         fclose(file);
@@ -402,6 +403,7 @@ Player *player_attack(Player *ply, Fight *fight, char key)
     int i = 0;
     Weapon *ply_weapon = get_player_current_weapon(ply);
     Armor *ply_armor = get_player_current_armor(ply);
+
     // put all if in switch
     switch (key)
     {

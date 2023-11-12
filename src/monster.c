@@ -333,7 +333,6 @@ void monster_death(Monster *monster, Player *ply)
     }
 }
 
-
 int testMonsterLife(Monster *monster){
     printf("pv monstre %f\n", monster->health);
     if (monster->health <= 0)
@@ -355,7 +354,6 @@ int nb_death_monster(Fight *fight)
 }
 int fights(Fight *fight, Player *ply)
 {
-
     displayMonster(fight);
     int nb = fight->nbMonsters;
     while (1) {
@@ -385,7 +383,6 @@ int fights(Fight *fight, Player *ply)
                 }
             }
             displayMonster(fight);
-
             player_attack(ply, fight, key);
             for (int i = 0; i < fight->nbMonsters; i++) {
                 if (fight->monsters[i].health == -1) {
@@ -400,7 +397,6 @@ int fights(Fight *fight, Player *ply)
                 return 0;
             printf("\n[Appuyez sur Entrée pour continuer]");
             while (getchar() != '\n');
-
             reinit_player_info(ply);
         }
     return 1;

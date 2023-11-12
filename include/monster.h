@@ -59,7 +59,6 @@ int nb_death_monster(Fight *fight);
 
 int testMonsterLife(Monster *monster);
 
-
 Player *use_spell(Player *ply, int key, Fight *fight);
 Player *player_defense(Player *ply, Fight *fight);
 Player *player_attack(Player *ply, Fight *fight, char key);
