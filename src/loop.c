@@ -50,6 +50,10 @@ int processUserInput(char userInput, Context* context, Player * player)
                     }
                     player->exp += 10;
                     verify_exp(player);
+                    player->health += player->max_health>player->health+10?player->health+10:player->max_health;
+                    if (is_boss ==1){
+                        nextMap(context,player);
+                    }
                 }
                 context->y-=1;
                 if(context->map[context->y][context->x]=='M'){
@@ -89,6 +93,10 @@ int processUserInput(char userInput, Context* context, Player * player)
                     }
                     player->exp += 10;
                     verify_exp(player);
+                    player->health += player->max_health>player->health+10?player->health+10:player->max_health;
+                    if (is_boss ==1){
+                        nextMap(context,player);
+                    }
                 }
                 context->x+=1;
                 if(context->map[context->y][context->x]=='M'){
@@ -128,6 +136,10 @@ int processUserInput(char userInput, Context* context, Player * player)
                     }
                     player->exp += 10;
                     verify_exp(player);
+                    player->health += player->max_health>player->health+10?player->health+10:player->max_health;
+                    if (is_boss ==1){
+                        nextMap(context,player);
+                    }
                 }
                 context->y+=1;
                 if(context->map[context->y][context->x]=='M'){
@@ -168,6 +180,12 @@ int processUserInput(char userInput, Context* context, Player * player)
                     }
                     player->exp += 10;
                     verify_exp(player);
+                    player->health += player->max_health>player->health+10?player->health+10:player->max_health;
+                    if (is_boss ==1){
+                        nextMap(context,player);
+                    }
+
+                    saveMap(context);
                 }
                 context->x-=1;
                 if(context->map[context->y][context->x]=='M'){
@@ -195,7 +213,6 @@ int processUserInput(char userInput, Context* context, Player * player)
         case 'Q':
             return 0;
     }
-    player->health = player->max_health;
 
     save_player(player);
     save_armor(player);

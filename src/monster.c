@@ -17,39 +17,18 @@ char *m2[] = {
     "        //.=|=.0                   "};
 
 char *m3[] = {
-    "             _/|    _   | |_       ",
-    "           _/_ |   _|   | _ |      ",
-    "         _/_/| /  /   |  | _ _     ",
     "       _/_/  |/  /  _  |_ / | |_   ",
     "     _/_/    ||  | | | o/ ||    |  ",
     "    /_/  | | | |  |  |_V  /|  | |  ",
     "   //    ||| |  |_/    |__/ | | |  ",
-    "   / __| || |    |         /  / |  ",
-    "  /_/  ||||  /|        // | |  / | ",
-    " //    |/  /   /         /  |/  /  ",
-    "        |/    |    |    |    |/    ",
-    "              /_|  | |_  |         ",
-    "             / /_| |_||  |         ",
-    "             | / |/||  |  |        ",
-    "              /  /|||/||/ /        ",
-    "                 |/ |  /           "};
+    "   / __| || |    |         /  / |  "};
 
 char *m4[] = {
-    "                        /|         ",
-    "                        ||         ",
     "          ____ (((+))) _||_        ",
     "         /.--.|  .-.  /.||.|       ",
     "        /.,   |_(0.0)// || |       ",
     "       /;` ;/   ||m|//  ||  |;     ",
-    "       |:    |   `:`  __||__:|     ",
-    "       |:  |   __ T  (@~)(~@)|     ",
-    "       |: |  _/|     |_ |/  :|     ",
-    "       |:   /  |     | |_   :|     ",
-    "       |'  /   |     |   |  |      ",
-    "        |_/    |     |   |_/       ",
-    "               |     |             ",
-    "               |__|__|             ",
-    "               |_____|             "};
+    "       |:    |   `:`  __||__:|     "};
 
 //######################################################
 //                       EXEMPLE                      
@@ -246,7 +225,7 @@ void createMonster(Monster * monster, int level, int is_boss){
         monster->current_attack = 0;
         monster->type = rand() % (2) + 3;
         monster->exp_drop = 20 + level * 12;
-        monster->height = 15;
+        monster->height = 5;
         attributSpriteToMonster(monster);
     }else{
         srand(time(NULL));
@@ -270,7 +249,7 @@ void createMonsters(Fight *fight, int level, int is_boss){
         createMonster(&(fight->monsters[0]), level, is_boss);
     }else{
         srand(time(NULL));
-        fight->nbMonsters = rand() % (5) + 1;
+        fight->nbMonsters = rand() % (4) + 1;
         fight->monsters = malloc(sizeof(Monster) * fight->nbMonsters);
         for(int i = 0; i < fight->nbMonsters; i++){
             createMonster(&(fight->monsters[i]), level, is_boss);
