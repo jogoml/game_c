@@ -15,6 +15,44 @@ char *m2[] = {
     "           |=|                     ",
     "          __|__                    ",
     "        //.=|=.0                   "};
+
+char *m3[] = {
+    "              _          _         ",
+    "             _/|    _   | |_       ",
+    "           _/_ |   _|   | _ |      ",
+    "         _/_/| /  /   |  | _ _     ",
+    "       _/_/  |/  /  _  |_ / | |_   ",
+    "     _/_/    ||  | | | o/ ||    |  ",
+    "    /_/  | | | |  |  |_V  /|  | |  ",
+    "   //    ||| |  |_/    |__/ | | |  ",
+    "   / __| || |    |         /  / |  ",
+    "  /_/  ||||  /|        // | |  / | ",
+    " //    |/  /   /         /  |/  /  ",
+    "        |/    |    |    |    |/    ",
+    "              /_|  | |_  |         ",
+    "             / /_| |_||  |         ",
+    "             | / |/||  |  |        ",
+    "              /  /|||/||/ /        ",
+    "                 |/ |  /           ",
+    "                  /                "};
+
+char *m4[] = {
+    "                        /|         ",
+    "                        ||         ",
+    "          ____ (((+))) _||_        ",
+    "         /.--.|  .-.  /.||.|       ",
+    "        /.,   |_(0.0)// || |       ",
+    "       /;` ;/   ||m|//  ||  |;     ",
+    "       |:    |   `:`  __||__:|     ",
+    "       |:  |   __ T  (@~)(~@)|     ",
+    "       |: |  _/|     |_ |/  :|     ",
+    "       |:   /  |     | |_   :|     ",
+    "       |'  /   |     |   |  |      ",
+    "        |_/    |     |   |_/       ",
+    "               |     |             ",
+    "               |__|__|             ",
+    "               |_____|             "};
+
 //######################################################
 //                       EXEMPLE                      
 
@@ -58,8 +96,17 @@ void attributSpriteToMonster(Monster * monster){
             monster->sprite[i] = malloc(sizeof(char) * (MONSTER_WIDTH + 1)); // +1 for the null terminator
             strcpy(monster->sprite[i], m1[i]);
         }
-    }
-    else {
+    }else if (monster->type == 3) {
+        for (int i = 0; i < monster->height; i++) {
+            monster->sprite[i] = malloc(sizeof(char) * (MONSTER_WIDTH + 1)); // +1 for the null terminator
+            strcpy(monster->sprite[i], m3[i]);
+        }
+    }else if (monster->type == 4) {
+        for (int i = 0; i < monster->height; i++) {
+            monster->sprite[i] = malloc(sizeof(char) * (MONSTER_WIDTH + 1)); // +1 for the null terminator
+            strcpy(monster->sprite[i], m4[i]);
+        }
+    }else {
         for (int i = 0; i < monster->height; i++) {
             monster->sprite[i] = malloc(sizeof(char) * (MONSTER_WIDTH + 1)); // +1 for the null terminator
             strcpy(monster->sprite[i], m2[i]);
