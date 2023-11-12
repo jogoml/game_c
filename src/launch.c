@@ -119,8 +119,6 @@ int in_game_menu(Player * player, Context * context){
     case '1':
         return 1;
     case '2':
-        clearScreen();
-        printf("\nCaractéristiques du personnage :\n");
         displayPlayer(player);
         return 1;
     case '3':

@@ -2,22 +2,28 @@
 
 int eventLoop(Player * player, Context * context)
 {
-    clearScreen();
-    showMap(context);
+    int exitMenu = 0;
     while(1) 
     {
+        clearScreen();
+        showMap(context);
         system ("/bin/stty raw");
         char input = fgetc(stdin);
         system ("/bin/stty cooked");
-        if(processUserInput(input,context, player) == 0) {
-            return 0;
+        if(processUserInput(input,context, player, &exitMenu) == 0) {
+            if (exitMenu == 0) {
+                return 0;
+            }else if (exitMenu == 2) {
+                menu(player, context);
+                break;
+            }
         }
         clearScreen();
         showMap(context);
     }
 }
 
-int processUserInput(char userInput, Context* context, Player * player) 
+int processUserInput(char userInput, Context* context, Player * player, int *exitMenu) 
 {
     if (context->map == NULL)
     {
@@ -102,12 +108,22 @@ int processUserInput(char userInput, Context* context, Player * player)
             break;
         case 'p':
             // menu pause
+            *exitMenu = in_game_menu(player, context);
+            if (*exitMenu == 1) {
+                getCurrentMap(context);
+                getMap(context);
+                return 1;
+            } else if (*exitMenu == 2) {
+                return 2;
+            } else {
+                return 0;
+            }
             break;
         case 'i':
             displayPlayer(player);
             break;
         case 'Q':
-            // exits program
+            *exitMenu = 0;
             return 0;
     }
     save_player(player);
