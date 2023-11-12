@@ -77,7 +77,7 @@ void magasin(Player *ply)
             ply->money -= wp[(c -48) -1]->price;
             ply->weapons = add_weapon(ply->weapons, wp[(c -48) - 1], ply->nb_arme);
             ply->nb_arme++;
-            printf("Arme %s achetée !\n", wp[(c -48) - 1]->name);
+            printf("%s achetée !\n", wp[(c -48) - 1]->name);
             save_weapon(ply);
             magasin(ply);
         } else
@@ -98,7 +98,7 @@ void magasin(Player *ply)
             ply->money -= armor[(c -48) -1]->price;
             ply->armors = add_armor(ply->armors, armor[(c -48) - 1], ply->nb_armure);
             ply->nb_armure++;
-            printf("Armure %s achetée !\n", armor[(c -48) - 1]->name);
+            printf("%s achetée !\n", armor[(c -48) - 1]->name);
             save_armor(ply);
             magasin(ply);
         } else
@@ -118,7 +118,7 @@ void magasin(Player *ply)
             ply->money -= spell[(c -48) -1]->price;
             ply->spell = add_spell(ply->spell, spell[(c -48) - 1], ply->nb_spell);
             ply->nb_spell++;
-            printf("Sort %s acheté !\n", spell[(c -48) - 1]->name);
+            printf("Potion %s acheté !\n", spell[(c -48) - 1]->name);
             save_spell(ply);
             magasin(ply);
         } else
