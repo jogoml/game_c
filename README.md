@@ -10,6 +10,10 @@ X : Obstacle
 zqsd pour bouger
 
 ## COMMENT INSTALLER : 
+
+LINUX FORTEMENT RECOMMANDER
+
+
  - Avoir cmake
 
 puis lancer ces commandes:
