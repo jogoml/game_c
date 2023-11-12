@@ -23,6 +23,8 @@ Player *init_player(char *name)
     ply->attack_max = 0;
     ply->nb_attack = 0;
     ply->nb_spell = 0;
+    ply->difficulty = 1;
+    ply->count = 0;
     strcpy(ply->name, name);
     save_player(ply);
 
@@ -76,6 +78,8 @@ void save_player(Player *player)
         fprintf(file, "Nb arme : %d\n", player->nb_arme);
         fprintf(file, "Nb armure : %d\n", player->nb_armure);
         fprintf(file, "Nb sort : %d\n", player->nb_spell);
+        fprintf(file, "Difficulté : %d\n", player->difficulty);
+        fprintf(file, "Count : %d\n", player->count);
     }
     fclose(file);
 }
@@ -106,6 +110,8 @@ void createPlayer(Player *player) {
         fprintf(file, "Nb arme : %d\n", player->nb_arme);
         fprintf(file, "Nb armure : %d\n", player->nb_armure);
         fprintf(file, "Nb sort : %d\n", player->nb_spell);
+        fprintf(file, "Difficulté : %d\n", player->difficulty);
+        fprintf(file, "Count : %d\n", player->count);
 
         fclose(file);
     } else {
@@ -184,6 +190,8 @@ int search_player(Player *player) {
             fscanf(file, "Nb arme : %d\n", &player->nb_arme);
             fscanf(file, "Nb armure : %d\n", &player->nb_armure);
             fscanf(file, "Nb sort : %d\n", &player->nb_spell);
+            fscanf(file, "Difficulté : %d\n", &player->difficulty);
+            fscanf(file, "Count : %d\n", &player->count);
             fclose(file);
             return 1;
         }

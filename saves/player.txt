@@ -1,16 +1,18 @@
 Nom : ezfzref
-Niveau : 41
-Expérience : 20
-Exp next : 61
-Santé : 500.0
-Santer max : 500.0
-Mana : 500
-Argent : 693.00
+Niveau : 55
+Expérience : 30
+Exp next : 82
+Santé : 640.0
+Santer max : 640.0
+Mana : 640
+Argent : 2730.00
 Attaque : 0
 Défense : 1
-Attaque Min : 81
-Attaque Max : 82
+Attaque Min : 109
+Attaque Max : 110
 Nb attaque : 1
 Nb arme : 1
 Nb armure : 1
 Nb sort : 0
+Difficulté : 3
+Count : 0

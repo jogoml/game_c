@@ -36,10 +36,10 @@ typedef struct Fight {
     Monster *monsters;
 } Fight;
 
-Fight *init_fight();
+Fight *init_fight(Player *player);
 void free_fight(Fight *fight);
 void createMonster(Monster * monster, int level);
-void createMonsters(Fight *fight);
+void createMonsters(Fight *fight, int level);
 
 void attributSpriteToMonster(Monster * monster);
 void displayMonster(Fight *fight);

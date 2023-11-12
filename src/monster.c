@@ -161,11 +161,11 @@ int exist_weapon(Player *ply, int id)
     return 0;
 }
 
-Fight *init_fight(){
+Fight *init_fight(Player *player){
     Fight *fight = malloc(sizeof(Fight));
     fight->target = -1;
     fight->monsters = NULL;
-    createMonsters(fight);
+    createMonsters(fight, player->difficulty);
     return fight;
 }
 
@@ -202,12 +202,12 @@ void createMonster(Monster * monster, int level){
     attributSpriteToMonster(monster);
 }
 
-void createMonsters(Fight *fight){
+void createMonsters(Fight *fight, int level){
     srand(time(NULL));
     fight->nbMonsters = rand() % (5) + 1;
     fight->monsters = malloc(sizeof(Monster) * fight->nbMonsters);
     for(int i = 0; i < fight->nbMonsters; i++){
-        createMonster(&(fight->monsters[i]), 1);
+        createMonster(&(fight->monsters[i]), level);
     }
 }
 

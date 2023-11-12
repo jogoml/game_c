@@ -28,11 +28,16 @@ int processUserInput(char userInput, Context* context, Player * player)
     switch(userInput) {
         case 'z':
             if(!(context->y-1<0 || context->map[context->y-1][context->x]=='O' || context->map[context->y-1][context->x]=='N')){
-                Fight *fight1 = init_fight();
+                Fight *fight1 = init_fight(player);
                 free_fight(fight1);
                 if(fight(player) == 0) {
                     endGame(context, player, 0);
                     return 0;
+                }
+                player->count++;
+                if(player->count%3==0){
+                    player->difficulty++;
+                    player->count=0;
                 }
                 player->exp += 10;
                 verify_exp(player);
@@ -52,6 +57,11 @@ int processUserInput(char userInput, Context* context, Player * player)
                     endGame(context, player, 0);
                     return 0;
                 }
+                player->count++;
+                if(player->count%3==0){
+                    player->difficulty++;
+                    player->count=0;
+                }
                 player->exp += 10;
                 verify_exp(player);
                 context->x+=1;
@@ -69,6 +79,11 @@ int processUserInput(char userInput, Context* context, Player * player)
                 if(fight(player) == 0) {
                     endGame(context, player, 0);
                     return 0;
+                }
+                player->count++;
+                if(player->count%3==0){
+                    player->difficulty++;
+                    player->count=0;
                 }
                 player->exp += 10;
                 verify_exp(player);
@@ -88,6 +103,11 @@ int processUserInput(char userInput, Context* context, Player * player)
                 if(fight(player) == 0) {
                     endGame(context, player, 0);
                     return 0;
+                }
+                player->count++;
+                if(player->count%3==0){
+                    player->difficulty++;
+                    player->count=0;
                 }
                 player->exp += 10;
                 verify_exp(player);
