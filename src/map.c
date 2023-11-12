@@ -116,6 +116,7 @@ void nextMap(Context *context, Player *player){
     {
         if(strcmp(context->nameMap, maps[i]) == 0){
             if(i+1 < nbMaps){
+                player->difficulty ++;
                 context->nameMap = maps[i+1];
                 getMap(context);
                 setCurrentMap(context);
@@ -131,7 +132,7 @@ void nextMap(Context *context, Player *player){
 
 void showMap(Context* context)
 {
-    printf("Quitter : Q(Maj)                    Menu : p                    Inventaire : i                    Move : zqsd\n");
+    printf("Quitter : Q(Maj)            Menu : p            Inventaire : i            Move : zqsd\n");
     for (int i = 0; i < ROWS; i++)
     {
         for(int k = 0; k < 3; k++)

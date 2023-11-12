@@ -29,6 +29,8 @@ typedef struct Player {
     int nb_arme;
     int nb_armure;
     int nb_spell;
+    int difficulty;
+    int count;
     
     Weapon **weapons;
     Armor **armors;
