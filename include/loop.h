@@ -10,6 +10,6 @@
 
 int eventLoop(Player *player, Context *context);
 
-int processUserInput(char userInput, Context* context, Player * player, int *menuChoice);
+int processUserInput(char userInput, Context* context, Player * player);
 
 #endif
