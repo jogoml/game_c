@@ -1,42 +1,48 @@
 #include "player.h"
 #include "monster.h"
 
-Player *init_player(char *name)
+Player *init_player(char *name, Player *ply)
 {
-    Player *ply = malloc(sizeof(Player));
+    ply = malloc(sizeof(Player));
     ply->name = malloc(sizeof(char) * strlen(name) + 1);
     ply->weapons = init_list_weapon(7);
     ply->armors = init_list_armor(7);
-    ply->spell = init_list_spell(7);
+    ply->spell = init_list_spell(9);
+    ply->nb_arme = 0;
+    ply->nb_armure = 0;
+    ply->current_attack = 0;
+    ply->money = 100;
+    ply->mana = 50;
     ply->level = 1;
     ply->exp = 0;
     ply->exp_next = 100;
     ply->health = 100;
     ply->max_health = 100;
-    ply->mana = 100;
-    ply->money = 0;
-    ply->current_attack = 0;
     ply->def = 0;
     ply->attack_min = 0;
     ply->attack_max = 0;
     ply->nb_attack = 0;
-    ply->nb_arme = 0;
-    ply->nb_armure = 0;
     ply->nb_spell = 0;
+    ply->difficulty = 1;
+    ply->count = 0;
     strcpy(ply->name, name);
     save_player(ply);
 
-    Weapon *weapon = create_weapon("épée en bois",5, 2, 1, 1, 0);
+    Weapon *weapon = create_weapon("épée en bois",15, 5, 1, 2, 0);
     ply->weapons = add_weapon(ply->weapons, weapon, ply->nb_arme);
     ply->nb_arme++;
     get_player_current_weapon(ply);
     equip_weapon(weapon, ply);
+    save_weapon(ply);
 
-    Armor *armor = create_armor("Robe d'Apprenti", 0, 1, 0);
+    Armor *armor = create_armor("Robe d'Apprenti", 0, 2, 0);
     ply->armors = add_armor(ply->armors, armor, ply->nb_armure);
     ply->nb_armure++;
     get_player_current_armor(ply);
     equip_armor(armor, ply);
+    save_armor(ply);
+
+    save_spell(ply);
 
     return ply;
 }
@@ -76,18 +82,24 @@ void save_player(Player *player)
         fprintf(file, "Nb arme : %d\n", player->nb_arme);
         fprintf(file, "Nb armure : %d\n", player->nb_armure);
         fprintf(file, "Nb sort : %d\n", player->nb_spell);
+        fprintf(file, "Difficulté : %d\n", player->difficulty);
+        fprintf(file, "Count : %d\n", player->count);
     }
     fclose(file);
 }
 
-void createPlayer(Player *player) {
+Player *createPlayer(Player *player) {
     clearScreen();
     char name[50] = "";
     while (strlen(name) == 0 || name == "\n") {
         printf("Entrez le nom du personnage : ");
         scanf("%s", name);
     }
-    player = init_player(name);
+    remove("../saves/armors.csv");
+    remove("../saves/player.txt");
+    remove("../saves/weapons.csv");
+    remove("../saves/spells.csv");
+    player = init_player(name, player);
     FILE *file = fopen("../saves/player.txt", "w");
     if (file != NULL) {
         fprintf(file, "Nom : %s\n", player->name);
@@ -106,11 +118,14 @@ void createPlayer(Player *player) {
         fprintf(file, "Nb arme : %d\n", player->nb_arme);
         fprintf(file, "Nb armure : %d\n", player->nb_armure);
         fprintf(file, "Nb sort : %d\n", player->nb_spell);
+        fprintf(file, "Difficulté : %d\n", player->difficulty);
+        fprintf(file, "Count : %d\n", player->count);
 
         fclose(file);
     } else {
         printf("Impossible d'enregistrer le personnage dans le fichier.\n");
     }
+    return player;
 }
 
 void displayPlayer(Player *player) {
@@ -127,6 +142,26 @@ void displayPlayer(Player *player) {
     printf("Nb arme : %d\n", player->nb_arme);
     printf("Nb armure : %d\n", player->nb_armure);
     printf("Nb sort : %d\n", player->nb_spell);
+
+    for (int i = 0; i < player->nb_arme; i++) {
+        printf("%d. Arme: %s\tAttaque Min: %d\tAttaque Max: %d\tNombre d'attaques par tour: %d\n",
+        i+1, player->weapons[i]->name, player->weapons[i]->attaqueMin, player->weapons[i]->attaqueMax, player->weapons[i]->attaquesParTour);
+    }
+    for (int i = 0; i < player->nb_armure; i++) {
+        printf("%d. Armure: %s\tProtection: %d\n",
+        i + 1, player->armors[i]->name, player->armors[i]->protection);
+    }
+    for (int i = 0; i < player->nb_spell; i++) {
+        if (player->spell[i]->type == OFFENSIVE)
+            printf("%d. Sort: %s\tType: Offense\tMana: %d\tDégat: %d\n", i + 1, player->spell[i]->name,
+            player->spell[i]->mana_cost, player->spell[i]->damage);
+        if (player->spell[i]->type == DEFENSE)
+            printf("%d. Sort: %s\tType: Défense\tMana: %d\tDéfense: %d\n", i + 1, player->spell[i]->name,
+            player->spell[i]->mana_cost, player->spell[i]->def);
+        if (player->spell[i]->type == CARE)
+            printf("%d. Sort: %s\tType: Soin\tMana: %d\tSoin: %d\n", i + 1, player->spell[i]->name,
+            player->spell[i]->mana_cost, player->spell[i]->care);
+    }
     printf("Q - Quitter\n");
     while(1){
         system ("/bin/stty raw");
@@ -149,6 +184,25 @@ void displayPlayer(Player *player) {
         printf("Nb arme : %d\n", player->nb_arme);
         printf("Nb armure : %d\n", player->nb_armure);
         printf("Nb sort : %d\n", player->nb_spell);
+        for (int i = 0; i < player->nb_arme; i++) {
+            printf("%d. Arme: %s\tAttaque Min: %d\tAttaque Max: %d\tNombre d'attaques par tour: %d\n",
+            i+1, player->weapons[i]->name, player->weapons[i]->attaqueMin, player->weapons[i]->attaqueMax, player->weapons[i]->attaquesParTour);
+        }
+        for (int i = 0; i < player->nb_armure; i++) {
+            printf("%d. Armure: %s\tProtection: %d\n",
+            i + 1, player->armors[i]->name, player->armors[i]->protection);
+        }
+        for (int i = 0; i < player->nb_spell; i++) {
+            if (player->spell[i]->type == OFFENSIVE)
+                printf("%d. Sort: %s\tType: Offense\tMana: %d\tDégat: %d\n", i + 1, player->spell[i]->name,
+                player->spell[i]->mana_cost, player->spell[i]->damage);
+            if (player->spell[i]->type == DEFENSE)
+                printf("%d. Sort: %s\tType: Défense\tMana: %d\tDéfense: %d\n", i + 1, player->spell[i]->name,
+                player->spell[i]->mana_cost, player->spell[i]->def);
+            if (player->spell[i]->type == CARE)
+                printf("%d. Sort: %s\tType: Soin\tMana: %d\tSoin: %d\n", i + 1, player->spell[i]->name,
+                player->spell[i]->mana_cost, player->spell[i]->care);
+        }
         printf("Q - Quitter\n");
         
     }
@@ -168,23 +222,35 @@ int search_player(Player *player) {
                     printf("erreur lors de la recuperation de la sauvegarde\n");
                     return 0;
                 }
+                fscanf(file, "Niveau : %d\n", &player->level);
+                fscanf(file, "Expérience : %d\n", &player->exp);
+                fscanf(file, "Exp next : %d\n", &player->exp_next);
+                fscanf(file, "Santé : %f\n", &player->health);
+                fscanf(file, "Santer max : %f\n", &player->max_health);
+                fscanf(file, "Mana : %d\n", &player->mana);
+                fscanf(file, "Argent : %f\n", &player->money);
+                fscanf(file, "Attaque : %d\n", &player->current_attack);
+                fscanf(file, "Défense : %d\n", &player->def);
+                fscanf(file, "Attaque Min : %d\n", &player->attack_min);
+                fscanf(file, "Attaque Max : %d\n", &player->attack_max);
+                fscanf(file, "Nb attaque : %d\n", &player->nb_attack);
+                fscanf(file, "Nb arme : %d\n", &player->nb_arme);
+                fscanf(file, "Nb armure : %d\n", &player->nb_armure);
+                fscanf(file, "Nb sort : %d\n", &player->nb_spell);
+                fscanf(file, "Difficulté : %d\n", &player->difficulty);
+                fscanf(file, "Count : %d\n", &player->count);
+                fclose(file);
             }
-            fscanf(file, "Niveau : %d\n", &player->level);
-            fscanf(file, "Expérience : %d\n", &player->exp);
-            fscanf(file, "Exp next : %d\n", &player->exp_next);
-            fscanf(file, "Santé : %f\n", &player->health);
-            fscanf(file, "Santer max : %f\n", &player->max_health);
-            fscanf(file, "Mana : %d\n", &player->mana);
-            fscanf(file, "Argent : %f\n", &player->money);
-            fscanf(file, "Attaque : %d\n", &player->current_attack);
-            fscanf(file, "Défense : %d\n", &player->def);
-            fscanf(file, "Attaque Min : %d\n", &player->attack_min);
-            fscanf(file, "Attaque Max : %d\n", &player->attack_max);
-            fscanf(file, "Nb attaque : %d\n", &player->nb_attack);
-            fscanf(file, "Nb arme : %d\n", &player->nb_arme);
-            fscanf(file, "Nb armure : %d\n", &player->nb_armure);
-            fscanf(file, "Nb sort : %d\n", &player->nb_spell);
-            fclose(file);
+            player->weapons = init_list_weapon(7);
+            player->armors = init_list_armor(7);
+            player->spell = init_list_spell(9);
+            player->nb_spell = 0;
+            player->nb_arme = 0;
+            player->nb_armure = 0;
+            restor_armors_player(player);
+            restor_spells_player(player);
+            restor_weapons_player(player);
+
             return 1;
         }
         fclose(file);
@@ -193,7 +259,7 @@ int search_player(Player *player) {
 }
 
 void free_player(Player *player) {
-    if (player->name != NULL) {
+    if (player != NULL) {
         free(player->name);
     }
     free(player);
@@ -202,7 +268,7 @@ void free_player(Player *player) {
 Player *equip_weapon(Weapon *weapon, Player *ply)
 {
     for (int i = 0; i < ply->nb_arme; i++) {
-        if (ply->weapons[i]->name == weapon->name) {
+        if (strcmp(ply->weapons[i]->name, weapon->name) == 0) {
             ply->weapons[i]->equiped = 1;
             ply->attack_max = weapon->attaqueMax;
             ply->attack_min = weapon->attaqueMin;
@@ -216,7 +282,7 @@ Player *equip_weapon(Weapon *weapon, Player *ply)
 Player *equip_armor(Armor *armor, Player *ply)
 {
     for (int i = 0; i < ply->nb_armure; i++) {
-        if (ply->armors[i]->name == armor->name) {
+        if (strcmp(ply->armors[i]->name, armor->name) == 0) {
             ply->armors[i]->equiped = 1;
             ply->def = armor->protection;
         } else
@@ -253,7 +319,7 @@ int display_player_weapon(Player *ply)
     }
     printf("Quelle arme voulez-vous utiliser ?\n");
     for (int i = 0; i < ply->nb_arme; i++) {
-        printf("%d. Arme: %s\nAttaque Min: %d\nAttaque Max: %d\nNombre d'attaques par tour: %d\n",
+        printf("%d. Arme: %s\tAttaque Min: %d\tAttaque Max: %d\tNombre d'attaques par tour: %d\n",
         i+1, ply->weapons[i]->name, ply->weapons[i]->attaqueMin, ply->weapons[i]->attaqueMax, ply->weapons[i]->attaquesParTour);
     }
     return 1;
@@ -267,7 +333,7 @@ int display_player_armor(Player *ply)
     }
     printf("Quelle armure voulez-vous utiliser ?\n");
     for (int i = 0; i < ply->nb_arme; i++) {
-        printf("%d. Armure: %s\nProtection: %d\n",
+        printf("%d. Armure: %s\tProtection: %d\n",
         i + 1, ply->armors[i]->name, ply->armors[i]->protection);
     }
     return 1;
@@ -282,13 +348,13 @@ int display_player_spell(Player *ply)
     printf("Quel sort voulez-vous utiliser ?\n");
     for (int i = 0; i < ply->nb_spell; i++) {
         if (ply->spell[i]->type == OFFENSIVE)
-            printf("%d. Sort: %s\nType: Offense\nMana: %d\nDégat: %d\n", i + 1, ply->spell[i]->name,
+            printf("%d. Sort: %s\tType: Offense\tMana: %d\tDégat: %d\n", i + 1, ply->spell[i]->name,
             ply->spell[i]->mana_cost, ply->spell[i]->damage);
         if (ply->spell[i]->type == DEFENSE)
-            printf("%d. Sort: %s\nType: Défense\nMana: %d\nDéfense: %d\n", i + 1, ply->spell[i]->name,
+            printf("%d. Sort: %s\tType: Défense\tMana: %d\tDéfense: %d\n", i + 1, ply->spell[i]->name,
             ply->spell[i]->mana_cost, ply->spell[i]->def);
         if (ply->spell[i]->type == CARE)
-            printf("%d. Sort: %s\nType: Soin\nMana: %d\nSoin: %d\n", i + 1, ply->spell[i]->name,
+            printf("%d. Sort: %s\tType: Soin\tMana: %d\tSoin: %d\n", i + 1, ply->spell[i]->name,
             ply->spell[i]->mana_cost, ply->spell[i]->care);
     }
     return 1;
@@ -296,19 +362,19 @@ int display_player_spell(Player *ply)
 
 Player *use_spell(Player *ply, int key, Fight *fight)
 {
-    ply->mana -= ply->spell[(key -48)-1]->mana_cost;
-    if (ply->spell[(key -48)-1]->type == OFFENSIVE) {
-        ply->current_attack = ply->spell[(key -48)-1]->damage;
+    ply->mana -= ply->spell[key-1]->mana_cost;
+    if (ply->spell[key -1]->type == OFFENSIVE) {
+        ply->current_attack = ply->spell[key -1]->damage;
         for(int i = 0; i < fight->nbMonsters; i++)
             monster_defense(&fight->monsters[i], ply);
         ply->nb_attack--;
-    } else if (ply->spell[(key -48)-1]->type == DEFENSE) {
-        ply->def += ply->spell[(key -48)-1]->def;
-    } else if (ply->spell[(key -48)-1]->type == CARE) {
-        if (ply->spell[(key -48)-1]->care + ply->health >= 100)
+    } else if (ply->spell[key -1]->type == DEFENSE) {
+        ply->def += ply->spell[key-1]->def;
+    } else if (ply->spell[key-1]->type == CARE) {
+        if (ply->spell[key -1]->care + ply->health >= 100)
             ply->health = 100;
         else
-            ply->health += ply->spell[(key -48)-1]->care;
+            ply->health += ply->spell[key -1]->care;
     }
     return ply;
 }
@@ -316,7 +382,10 @@ Player *use_spell(Player *ply, int key, Fight *fight)
 Player *player_defense(Player *ply, Fight *fight)
 {
     for (int i = 0; i < fight->nbMonsters; i++) {
+        srand((unsigned int)time(NULL));
         monster_attack(&fight->monsters[i]);
+        if (fight->monsters[i].health > 0)
+            printf("Le monstre %d a lancé une attaque de \033[1;31m %d\033[0m\n", i+1, fight->monsters[i].current_attack);
         if (ply->health > 0) {
             if (ply->def <= fight->monsters[i].current_attack)
                 ply->health = (ply->health >= fight->monsters[i].current_attack ? ply->health - fight->monsters[i].current_attack + ply->def : 0); 
@@ -326,61 +395,76 @@ Player *player_defense(Player *ply, Fight *fight)
     return ply;
 }
 
+
+
 Player *player_attack(Player *ply, Fight *fight, char key)
 {
-    int o = 0, i = 0;
+    int i = 0;
     Weapon *ply_weapon = get_player_current_weapon(ply);
     Armor *ply_armor = get_player_current_armor(ply);
-    printf("Il vous reste encore %d attaques à effectuer\nQuelle action voulez-vous effectuer ? Souhaitez-vous:\n", ply->nb_attack);
-    printf("1- Attaquer avec votre arme %s ?\n2- Utiliser un sort?\n3- Changer votre arme?\n4- Changer d'armure?\n", ply_armor->name);
-    if (key == '1') {
+    // put all if in switch
+    switch (key)
+    {
+    case '1':
         printf("Quel monstre voulez-vous attaquer? ");
-        for(i = 0; i < fight->nbMonsters -1; i++)
-            printf("%d, ", i+1);
-        printf("ou %d?\n", i+1);
-        o = 1;
-        int id = getchar();
-        while (id < 48 || id - 48 > fight->nbMonsters) {
-            id = getchar();
+        for(i = 0; i < fight->nbMonsters -1; i++) {
+            if (fight->monsters[i].health != 0 && fight->monsters[i].health != -1)
+                printf("%d, ", i+1);
         }
-        fight->target = (id-48)-1;
+        if (fight->monsters[i].health != 0 && fight->monsters[i].health != -1)
+            printf("ou %d?\n", i+1);
+        int id = 0;
+        do
+        {
+            system ("/bin/stty raw");
+            key = fgetc(stdin);
+            system ("/bin/stty cooked");
+            id = key - '0';
+        } while ((id < 1 || id > 4) && testMonsterLife(&fight->monsters[id-1]));
+
+        fight->target = id-1;
         srand((unsigned int)time(NULL));
         ply->current_attack = rand() % (ply->attack_max - ply->attack_min + 1) + ply->attack_min;
-        printf("attaque: %d\n", ply->current_attack);
+        displayMonster(fight);
+        printf("Vous avez lancer une attaque de \033[1;31m%d\033[0m\n", ply->current_attack);
         monster_defense(&fight->monsters[fight->target], ply);
-        printf("santé monstre: %f\n", fight->monsters[fight->target].health);
         ply->nb_attack--;
-    }
-    if (key == '2') {
+        break;
+    case '2':
         if (display_player_spell(ply)) {
-            int id_spell = getchar();
-            while (id_spell < 48 || id_spell - 48 > ply->nb_spell) {
-                id_spell = getchar();
+            int id_spell = 0;
+            scanf("%d", &id_spell);
+            while (id_spell < 1 || id_spell > ply->nb_spell) {
+                scanf("%d", &id_spell);
             }
             use_spell(ply, id_spell, fight);
         }
-    }
-    if (key == '3') {
+        break;
+
+    case '3':
         if (display_player_weapon(ply)) {
-            int id_arme = getchar();
-            while (id_arme < 48 || id_arme - 48 > ply->nb_arme) {
-                id_arme = getchar();
+            int id_arme = 0;
+            scanf("%d", &id_arme);
+            while (id_arme < 1 || id_arme  > ply->nb_arme) {
+                scanf("%d", &id_arme);
             }
-            equip_weapon(ply->weapons[(id_arme - 48) -1], ply);
+            equip_weapon(ply->weapons[id_arme -1], ply);
         }
-    }
-    if (key == '4') {
+        break;
+    case '4':
         if (display_player_armor(ply)) {
-            int id_armure = getchar();
-            while (id_armure < 48 || id_armure - 48 > ply->nb_armure) {
+            int id_armure = 0;
+            scanf("%d", &id_armure);
+            while (id_armure <  1 || id_armure > ply->nb_armure) {
                 id_armure = getchar();
             }
-            equip_armor(ply->armors[(id_armure - 48) -1], ply);
+            equip_armor(ply->armors[id_armure -1], ply);
         }
+        break;
     }
     return ply;
-   
 }
+
 
 void save_spell(Player *ply)
 {
@@ -404,21 +488,21 @@ void save_spell(Player *ply)
 
 void save_armor(Player *ply)
 {
-    FILE * f = fopen("../saves/armors.csv", "w");
+    FILE *f = fopen("../saves/armors.csv", "w");
     if (f != NULL) {
         fprintf(f,"name;protection;price;equiped\n");
         for (int i = 0; i < ply->nb_armure; i++) {
             fprintf(f, "%s;%d;%f;%d\n", ply->armors[i]->name, ply->armors[i]->protection, ply->armors[i]->price, ply->armors[i]->equiped);
         }
-    }
     fclose(f);
+    }
 }
 
 void save_weapon(Player *ply)
 {
     FILE * f = fopen("../saves/weapons.csv", "w");
     if (f != NULL) {
-        fprintf(f,"name;attaqueMin;attaqueMin;attaquesParTour;price;equiped\n");
+        fprintf(f,"name;attaqueMin;attaqueMax;attaquesParTour;price;equiped\n");
         for (int i = 0; i < ply->nb_arme; i++) {
             fprintf(f, "%s;%d;%d;%d;%f;%d\n", ply->weapons[i]->name, ply->weapons[i]->attaqueMin, ply->weapons[i]->attaqueMax, ply->weapons[i]->attaquesParTour, ply->weapons[i]->price, ply->weapons[i]->equiped);
         }
@@ -445,12 +529,13 @@ void restor_weapons_player(Player *ply)
     f = fopen("../saves/weapons.csv", "r");
 
     if (f != NULL) {
-        fgets(malloc(sizeof (char) * 100), 100, f);
-        for(int i = 0; i < line-1; i++) {
-            fscanf(f,"\n%[^;];%d;%d;%d;%f;%d", name, &attaque_min, &attaque_max, &nb_tour, &price, &equip);
-            ply->weapons[i] = create_weapon(name, price, attaque_max, attaque_min, nb_tour, equip);
-            printf("arme: %s\n",name);
-            ply->weapons = add_weapon(ply->weapons, ply->weapons[i], i);
+        if (fgets(malloc(sizeof (char) * 100), 100, f) != NULL) {
+            for(int i = 0; i < line-2; i++) {
+                fscanf(f,"\n%[^;];%d;%d;%d;%f;%d", name, &attaque_min, &attaque_max, &nb_tour, &price, &equip);
+                ply->weapons[i] = create_weapon(name, price, attaque_max, attaque_min, nb_tour, equip);
+                ply->weapons = add_weapon(ply->weapons, ply->weapons[i], i);
+                ply->nb_arme++;
+            }
         }
     }
     free(name);
@@ -461,25 +546,29 @@ void restor_armors_player(Player *ply)
 {
     Armor *armor = malloc(sizeof(Armor));
     char *name = malloc(sizeof(char) *50);
-    int protection, equip;
+    int protection, line, equip;
     float price;
     FILE *f = fopen("../saves/armors.csv", "r");
-    char c = fgetc(f);
-    int line = 1;
-    while(c != EOF) {
-        c = fgetc(f);
-        if(c == '\n') {
-            line++;
+    if (f != NULL && fgets(malloc(sizeof (char) * 100), 100, f) != NULL) {
+        char c = fgetc(f);
+        line = 1;
+        while(c != EOF) {
+            c = fgetc(f);
+            if(c == '\n') {
+                line++;
+            }
         }
     }
     fclose(f);
     f = fopen("../saves/armors.csv", "r");
     if (f != NULL) {
-        fgets(malloc(sizeof (char) * 100), 100, f);
-        for(int i = 0; i < line; i++) {
-            fscanf(f,"\n%[^;];%d;%f;%d", name, &protection, &price, &equip);
-            ply->armors[i] = create_armor(name, price, protection, equip);
-            ply->armors = add_armor(ply->armors, ply->armors[i], i+1);
+        if (fgets(malloc(sizeof (char) * 100), 100, f) != NULL) {
+            for(int i = 0; i < line-1; i++) {
+                fscanf(f,"\n%[^;];%d;%f;%d", name, &protection, &price, &equip);
+                 ply->armors[i] = create_armor(name, price, protection, equip);
+                 ply->armors = add_armor(ply->armors, ply->armors[i], i);
+                 ply->nb_armure++;
+            }
         }
     }
     free(name);
@@ -504,18 +593,20 @@ void restor_spells_player(Player *ply)
     }
     fclose(f);
     f = fopen("../saves/spells.csv", "r");
-    fgets(malloc(sizeof (char) * 100), 100, f);
-    for(int i = 0; i < line-2; i++) {
-        fscanf(f,"\n%[^;];%[^;];%f;%d;%d;%d;%d;%d", name, type, &price, &level,&degat, &mana_cost, &def, &care);
-        if (strcmp("DEFENSE", type) == 0) {
-            ply->spell[i] = create_spell(name, DEFENSE, degat, def, mana_cost, price, level, care);
-            ply->spell = add_spell(ply->spell, ply->spell[i], i);
-        } else if (strcmp("OFFENSIVE", type) == 0) {
-            ply->spell[i] = create_spell(name, OFFENSIVE, degat, def, mana_cost, price, level, care);
-            ply->spell = add_spell(ply->spell, ply->spell[i], i);
-        }else if (strcmp("CARE", type) == 0) {
-            ply->spell[i] = create_spell(name, CARE, degat, def, mana_cost, price, level, care);
-            ply->spell = add_spell(ply->spell, ply->spell[i], i);
+    if (fgets(malloc(sizeof (char) * 100), 100, f) != NULL) {
+        for(int i = 0; i < line-2; i++) {
+            fscanf(f,"\n%[^;];%[^;];%f;%d;%d;%d;%d;%d", name, type, &price, &level,&degat, &mana_cost, &def, &care);
+            if (strcmp("DEFENSE", type) == 0) {
+                ply->spell[i] = create_spell(name, DEFENSE, degat, def, mana_cost, price, level, care);
+                ply->spell = add_spell(ply->spell, ply->spell[i], i);
+            } else if (strcmp("OFFENSIVE", type) == 0) {
+                ply->spell[i] = create_spell(name, OFFENSIVE, degat, def, mana_cost, price, level, care);
+                ply->spell = add_spell(ply->spell, ply->spell[i], i);
+            }else if (strcmp("CARE", type) == 0) {
+                ply->spell[i] = create_spell(name, CARE, degat, def, mana_cost, price, level, care);
+                ply->spell = add_spell(ply->spell, ply->spell[i], i);
+            }
+            ply->nb_spell++;
         }
     }
     free(name);

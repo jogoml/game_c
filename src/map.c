@@ -12,8 +12,6 @@ int getMap(Context* context)
         }
         free(context->map);
     }
-    printf("%s\n", context->nameMap);
-    printf("%ld\n",strlen(context->nameMap));
     context->map = malloc(sizeof(char *)*ROWS);
     if(context->map == NULL)
     {
@@ -116,6 +114,7 @@ void nextMap(Context *context, Player *player){
     {
         if(strcmp(context->nameMap, maps[i]) == 0){
             if(i+1 < nbMaps){
+                player->difficulty ++;
                 context->nameMap = maps[i+1];
                 getMap(context);
                 setCurrentMap(context);
@@ -129,9 +128,13 @@ void nextMap(Context *context, Player *player){
     
 }
 
-void showMap(Context* context)
+void showMap(Context* context, Player * player)
 {
-    printf("Quitter : Q(Maj)                    Menu : p                    Inventaire : i                    Move : zqsd\n");
+    printf("Quitter : Q(Maj)            Menu : p            Move : zqsd\n");
+    // display some info player
+    printf("\nPlayer : %s\n", player->name);
+    printf("HP : %.2f/%.2f\n", player->health, player->max_health);
+    printf("EXP : %d/%d\n", player->exp, player->exp_next);
     for (int i = 0; i < ROWS; i++)
     {
         for(int k = 0; k < 3; k++)
@@ -170,7 +173,8 @@ void showMap(Context* context)
                     }else if (context->map[i][j] == 'B')
                     {
                         printf("\033[1;33mB");
-                    }
+                    } else if (context->map[i][j] == 'S')
+                        printf("\033[1;33mS");
                     printf("\033[0m");
                     
                 }
@@ -183,16 +187,6 @@ void showMap(Context* context)
     {
         printf("ALED NO MAP\n");
         return;
-    }
-    
-    for (int i = 0; i < ROWS; i++)
-    {
-        for (int j = 0; j < COLUMNS; j++)
-        {
-            printf("%c", context->map[i][j]);
-        }
-        printf("\n");
-        
     }
     
 }

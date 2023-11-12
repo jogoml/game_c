@@ -29,6 +29,8 @@ typedef struct Player {
     int nb_arme;
     int nb_armure;
     int nb_spell;
+    int difficulty;
+    int count;
     
     Weapon **weapons;
     Armor **armors;
@@ -37,7 +39,7 @@ typedef struct Player {
 
 #include "cli.h"
 
-Player *init_player(char *name);
+Player *init_player(char *name, Player *ply);
 Player *reinit_player_info(Player *ply);
 Player *equip_weapon(Weapon *weapon, Player *ply);
 Player *equip_armor(Armor *armor, Player *ply);
@@ -48,7 +50,7 @@ int display_player_spell(Player *ply);
 
 int fight(Player *ply);
 
-void createPlayer(Player *player);
+Player *createPlayer(Player *player);
 void displayPlayer(Player *player);
 int search_player(Player *player);
 void free_player(Player *player);

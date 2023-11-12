@@ -7,7 +7,15 @@ int main(int argc, char **argv)
 
     menu(player, context);
 
-    free(player);
+    free_player(player);
+    if(context->map != NULL)
+    {
+        for (int i = 0; i < ROWS; i++)
+        {
+            free(context->map[i]);
+        }
+        free(context->map);
+    }
     free(context);
     
     return 0;
