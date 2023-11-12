@@ -69,6 +69,7 @@ void attributSpriteToMonster(Monster * monster){
 
 void displayMonster(Fight *fight) {
     clearScreen();
+    printf("Pause : p\n");
     char display[SCREEN_HEIGHT][SCREEN_WIDTH];
 
     for (int i = 0; i < SCREEN_HEIGHT; i++) {
@@ -266,6 +267,13 @@ void monster_death(Monster *monster, Player *ply)
     }
 }
 
+int testMonsterLife(Monster *monster){
+    printf("pv monstre %f\n", monster->health);
+    if (monster->health <= 0)
+        return 0;
+    return 1;
+}
+
 int nb_death_monster(Fight *fight)
 {
     int nb = fight->nbMonsters;
@@ -280,31 +288,48 @@ int nb_death_monster(Fight *fight)
 }
 int fights(Fight *fight, Player *ply)
 {
+    displayMonster(fight);
     int nb = fight->nbMonsters;
     while (1) {
         while (ply->nb_attack > 0) {
-            if (nb_death_monster(fight) == 1)
-                break;
-            printf("pv %s %f, mana %d\n",ply->name, ply->health, ply->mana);
-            Weapon *ply_weapon = get_player_current_weapon(ply);
-            printf("Il vous reste encore %d attaques à effectuer\nQuelle action voulez-vous effectuer ? Souhaitez-vous:\n", ply->nb_attack);
-            printf("1- Attaquer avec votre arme %s ?\n2- Utiliser un sort?\n3- Changer votre arme?\n4- Changer d'armure?\n", ply_weapon->name);
-            int key = 0;
-            scanf("%d", &key);
-            while (key < 1 || key > 4) {
-                scanf("%d", &key);
+            if (nb_death_monster(fight) == 1){
+                return 1;
             }
+            printf("pv %s\033[1;31m %.2f\033[0m, mana \033[0;34m%d\033[0m\n\n",ply->name, ply->health, ply->mana);
+            Weapon *ply_weapon = get_player_current_weapon(ply);
+            if (ply_weapon == NULL)
+            {
+                printf("Vous n'avez pas d'arme équipée\n");
+            }
+            
+            printf("\033[0;33mIl vous reste encore %d attaques à effectuer\033[0m\nQuelle action voulez-vous effectuer ?\n", ply->nb_attack);
+            printf("1- Attaquer avec votre arme %s ?\n2- Utiliser un sort?\n3- Changer votre arme?\n4- Changer d'armure?\n", ply_weapon->name);
+            char key;
+            do
+            {
+                system ("/bin/stty raw");
+                key = fgetc(stdin);
+                system ("/bin/stty cooked");
+            } while ((key<'1' || key>'4') && key != 'p');
+            if(key == 'p'){
+                if (in_game_menu(ply) == 0){
+                    return 2;
+                }
+            }
+            displayMonster(fight);
             player_attack(ply, fight, key);
             for (int i = 0; i < fight->nbMonsters; i++) {
                 if (fight->monsters[i].health == -1) {
                     continue;
                 }
                 monster_death(&fight->monsters[i], ply);
-                printf("pv monstre %d: %f\n", i + 1, fight->monsters[i].health);                
+                printf("pv monstre %d: \033[1;31m %.2f\033[0m\n", i + 1, fight->monsters[i].health);                
             }
             }
             if (player_defense(ply, fight) == NULL)
                 return 0;
+            printf("\n[Appuyez sur Entrée pour continuer]");
+            while (getchar() != '\n');
             reinit_player_info(ply);
         }
     return 1;

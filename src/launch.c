@@ -97,7 +97,7 @@ void menu(Player *player, Context *context)
     } while (choice != '0');
 }
 
-int in_game_menu(Player * player, Context * context){
+int in_game_menu(Player * player){
     while (1)
     {
         

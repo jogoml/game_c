@@ -19,6 +19,6 @@ void setCurrentMap(Context *context);
 
 void nextMap(Context *context, Player *player);
 
-void showMap(Context* context);
+void showMap(Context* context, Player * player);
 
 #endif

@@ -11,6 +11,7 @@
 #include "spell.h"
 #include "cli.h"
 #include "player.h"
+#include "launch.h"
 
 #define SCREEN_WIDTH 195
 #define SCREEN_HEIGHT 15
@@ -54,6 +55,8 @@ int exist_armor(Player *ply, int id);
 int exist_weapon(Player *ply, int id);
 int fights(Fight *fight, Player *ply);
 int nb_death_monster(Fight *fight);
+
+int testMonsterLife(Monster *monster);
 
 Player *use_spell(Player *ply, int key, Fight *fight);
 Player *player_defense(Player *ply, Fight *fight);

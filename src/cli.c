@@ -15,19 +15,14 @@ void endGame(Context *context, Player *player, int win)
     }
     else
     {
-        printf("Vous avez perdu !\n");
-    }
-    // Create real ends
+        remove("../saves/armors.csv");
+        remove("../saves/player.txt");
+        remove("../saves/weapons.csv");
+        remove("../saves/spells.csv");
 
-    free_player(player);
-    if(context->map != NULL)
-    {
-        for (int i = 0; i < ROWS; i++)
-        {
-            free(context->map[i]);
-        }
-        free(context->map);
+
+        printf("Vous avez perdu !\n");
+        sleep(3);
     }
-    free(context);
     return;
 }
