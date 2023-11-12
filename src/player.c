@@ -57,7 +57,7 @@ Player *reinit_player_info(Player *ply)
 }
 
 void save_player(Player *player)
-{
+{ 
     FILE *file = fopen("../saves/player.txt", "w");
     if (file != NULL) {
         fprintf(file, "Nom : %s\n", player->name);

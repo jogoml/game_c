@@ -95,3 +95,44 @@ void menu(Player *player, Context *context)
         clearScreen();
     } while (choice != '0');
 }
+
+int in_game_menu(Player * player, Context * context){
+    clearScreen();
+    
+    printf("     /\\                                                                    /\\\n");
+    printf("     ||---------------------------\\            /---------------------------||\n");
+    printf("<====||============================|   MENU   |============================||====>\n");
+    printf("     ||---------------------------/            \\---------------------------||\n");
+    printf("     \\/                                                                    \\/\n");  
+
+    printf("\n\n1 - Reprendre la partie\n");
+    printf("2 - Voir les carastéristiques de mon personnage\n");
+    printf("3 - Sauvegarder la partie\n");
+    printf("4 - Sauvegarder et revenir au menu principal\n");
+
+    system ("/bin/stty raw");
+    char choice = fgetc(stdin);
+    system ("/bin/stty cooked");
+    printf("%c", choice);
+    switch (choice)
+    {
+    case '1':
+        return 1;
+    case '2':
+        clearScreen();
+        printf("\nCaractéristiques du personnage :\n");
+        displayPlayer(player);
+        return 1;
+    case '3':
+        save_player(player);
+        //save_armor(player);
+        //save_weapon(player);
+        return 1;
+    case '4':
+        save_player(player);
+        //save_armor(player);
+        //save_weapon(player);
+        return 0;
+    return 1;
+    }
+}
