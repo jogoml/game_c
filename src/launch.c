@@ -31,7 +31,7 @@ void menu(Player *player, Context *context)
 {
     int playerExists = 0;
     int choice;
-    player = (Player *)malloc(sizeof(Player));
+    player = malloc(sizeof(Player));
     
     clearScreen();
     do
@@ -66,7 +66,8 @@ void menu(Player *player, Context *context)
                     }
                 }
                 restartMaps(context);
-                createPlayer(player);
+                free_player(player);
+                player = createPlayer(player);
                 setCurrentMap(context);
                 getMap(context);
                 launch_game(player, context);

@@ -170,7 +170,8 @@ void showMap(Context* context)
                     }else if (context->map[i][j] == 'B')
                     {
                         printf("\033[1;33mB");
-                    }
+                    } else if (context->map[i][j] == 'S')
+                        printf("\033[1;33mS");
                     printf("\033[0m");
                     
                 }

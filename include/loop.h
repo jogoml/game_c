@@ -6,6 +6,7 @@
 #include "cli.h"
 #include "player.h"
 #include "exp.h"
+#include "magasin.h"
 
 int eventLoop(Player *player, Context *context);
 

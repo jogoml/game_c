@@ -42,42 +42,41 @@ void display_inventory_spell(Spell **spell, Player *ply)
     }
 }
 
-void magasin(Player *ply, int key)
+void magasin(Player *ply)
 {
-    if (key == 'h'){
         printf("Que voulez-vous acheter?\n1- Une arme\n2- Une armure\n3- Un sort\n");
-        int choice = getchar();
-        while (choice -48 != 1 && choice -48 != 2 && choice -48 != 3) {
+        int choice;
+        scanf("%d", &choice);
+        while (choice  != 1 && choice != 2 && choice  != 3) {
             printf("Que voulez-vous acheter?\n1- Une arme\n2- Une armure\n3-Un sort\n");
-            choice = getchar();
+            scanf("%d", &choice);
         }
-        if (choice == '1') {
+        if (choice == 1) {
             Weapon **wp = inventory_weapon();
             display_inventory_weapon(wp, ply);
-            choice = getchar();
-            while (choice -48 > 7 || 0 >= choice -48)
-                choice = getchar();
-            ply->money -= wp[(choice -48) -1]->price;
-            ply->weapons = add_weapon(ply->weapons, wp[(choice -48) - 1], ply->nb_arme);
+            scanf("%d", &choice);
+            while (choice > 7 || 0 >= choice)
+                scanf("%d", &choice);
+            ply->money -= wp[(choice) -1]->price;
+            ply->weapons = add_weapon(ply->weapons, wp[(choice) - 1], ply->nb_arme);
             ply->nb_arme++;
-        } else if (choice == '2') {
+        } else if (choice == 2) {
             Armor **armor = inventory_armor();
             display_inventory_armor(armor, ply);
-            choice = getchar();
-            while (choice -48 > 7 || 0 >= choice -48)
-                choice = getchar();
-            ply->money -= armor[(choice -48) -1]->price;
-            ply->armors = add_armor(ply->armors, armor[(choice -48) - 1], ply->nb_armure);
+            scanf("%d", &choice);
+            while (choice > 7 || 0 >= choice)
+                scanf("%d", &choice);;
+            ply->money -= armor[(choice) -1]->price;
+            ply->armors = add_armor(ply->armors, armor[(choice) - 1], ply->nb_armure);
             ply->nb_armure++;
-        } else if (choice == '3') {
+        } else if (choice == 3) {
             Spell **spell = inventory_spell();
             display_inventory_spell(spell, ply);
-            choice = getchar();
-            while (choice -48 > 7 || 0 >= choice -48)
-                choice = getchar();
-            ply->money -= spell[(choice -48) -1]->price;
-            ply->spell = add_spell(ply->spell, spell[(choice -48) - 1], ply->nb_spell);
+            scanf("%d", &choice);
+            while (choice > 7 || 0 >= choice)
+                scanf("%d", &choice);
+            ply->money -= spell[(choice) -1]->price;
+            ply->spell = add_spell(ply->spell, spell[(choice) - 1], ply->nb_spell);
             ply->nb_spell++;
         }
-    }
 }

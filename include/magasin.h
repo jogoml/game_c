@@ -6,4 +6,4 @@
 void display_inventory_weapon(Weapon **wp, Player *ply);
 void display_inventory_armor(Armor **armor, Player *ply);
 void display_inventory_spell(Spell **spell, Player *ply);
-void magasin(Player *ply, int key);
+void magasin(Player *ply);
