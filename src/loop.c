@@ -28,6 +28,8 @@ int processUserInput(char userInput, Context* context, Player * player)
     switch(userInput) {
         case 'z':
             if(!(context->y-1<0 || context->map[context->y-1][context->x]=='O' || context->map[context->y-1][context->x]=='N')){
+                Fight *fight1 = init_fight();
+                free_fight(fight1);
                 if(fight(player) == 0) {
                     endGame(context, player, 0);
                     return 0;

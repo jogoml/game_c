@@ -7,6 +7,7 @@
 #include "player.h"
 #include "exp.h"
 #include "launch.h"
+#include "monster.h"
 
 int eventLoop(Player *player, Context *context);
 

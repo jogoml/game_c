@@ -161,6 +161,56 @@ int exist_weapon(Player *ply, int id)
     return 0;
 }
 
+Fight *init_fight(){
+    Fight *fight = malloc(sizeof(Fight));
+    fight->target = -1;
+    fight->monsters = NULL;
+    createMonsters(fight);
+    return fight;
+}
+
+void free_fight(Fight *fight){
+    if(fight != NULL){
+        if(fight->monsters != NULL){
+            for(int i = 0; i < fight->nbMonsters; i++){
+                if(fight->monsters[i].sprite != NULL){
+                    for(int j = 0; j < fight->monsters[i].height; j++){
+                        if(fight->monsters[i].sprite[j] != NULL){
+                            free(fight->monsters[i].sprite[j]);
+                        }
+                    }
+                    free(fight->monsters[i].sprite);
+                }
+            }
+            free(fight->monsters);
+        }
+        free(fight);
+    }
+}
+
+void createMonster(Monster * monster, int level){
+    srand(time(NULL));
+    monster->health = 10 * level;
+    monster->max_health = 10 * level;
+    monster->def = level;
+    monster->attack_min = 1+level;
+    monster->attack_max = 5+level;
+    monster->current_attack = 0;
+    monster->type = rand() % (2) + 1;
+    monster->exp_drop = 10 + level * 2;
+    monster->height = 5;
+    attributSpriteToMonster(monster);
+}
+
+void createMonsters(Fight *fight){
+    srand(time(NULL));
+    fight->nbMonsters = rand() % (5) + 1;
+    fight->monsters = malloc(sizeof(Monster) * fight->nbMonsters);
+    for(int i = 0; i < fight->nbMonsters; i++){
+        createMonster(&(fight->monsters[i]), 1);
+    }
+}
+
 void monster_death(Monster *monster, Player *ply)
 {
     srand((unsigned int)time(NULL));
