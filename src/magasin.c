@@ -2,6 +2,7 @@
 
 void display_inventory_weapon(Weapon **wp, Player *ply)
 {
+    clearScreen();
     printf("Quelle arme voulez-vous acheter?\n");
     printf("0. Retour\n");
     for (int i = 0; i < 7; i++) {
@@ -14,6 +15,7 @@ void display_inventory_weapon(Weapon **wp, Player *ply)
 
 void display_inventory_armor(Armor **armor, Player *ply)
 {
+    clearScreen();
     printf("Quelle armure voulez-vous acheter?\n");
     printf("0. Retour\n");
     for (int i = 0; i < 7; i++) {
@@ -26,6 +28,7 @@ void display_inventory_armor(Armor **armor, Player *ply)
 
 void display_inventory_spell(Spell **spell, Player *ply)
 {
+    clearScreen();
     printf("Quel sort voulez-vous acheter?\n");
     printf("0. Retour\n");
     for (int i = 0; i < 9; i++) {
