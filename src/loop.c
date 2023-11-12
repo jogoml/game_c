@@ -46,7 +46,8 @@ int processUserInput(char userInput, Context* context, Player * player)
                     context->map[context->y][context->x]='F';
                 }else if(context->map[context->y][context->x]=='B'){
                     context->map[context->y][context->x]='P';
-                }
+                } else if (context->map[context->y][context->x]=='S')
+                    magasin(player);
 
                 saveMap(context);
             }
@@ -69,7 +70,8 @@ int processUserInput(char userInput, Context* context, Player * player)
                     context->map[context->y][context->x]='F';
                 }else if(context->map[context->y][context->x]=='B'){
                     context->map[context->y][context->x]='P';
-                }
+                }else if (context->map[context->y][context->x]=='S')
+                    magasin(player);
                 
                 saveMap(context);
             }
@@ -92,7 +94,8 @@ int processUserInput(char userInput, Context* context, Player * player)
                     context->map[context->y][context->x]='F';
                 }else if(context->map[context->y][context->x]=='B'){
                     context->map[context->y][context->x]='P';
-                }
+                }else if (context->map[context->y][context->x]=='S')
+                    magasin(player);
                 
                 saveMap(context);
 
@@ -117,6 +120,8 @@ int processUserInput(char userInput, Context* context, Player * player)
                 }else if(context->map[context->y][context->x]=='B'){
                     context->map[context->y][context->x]='P';
                 }
+                else if (context->map[context->y][context->x]=='S')
+                    magasin(player);
 
                 saveMap(context);
             }
@@ -134,9 +139,11 @@ int processUserInput(char userInput, Context* context, Player * player)
         case 'Q':
             return 0;
     }
+
     save_player(player);
-    //save_armor(player);
-    //save_weapon(player);
+    save_armor(player);
+    save_weapon(player);
+    save_spell(player);
 
     return 1;
 
