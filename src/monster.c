@@ -15,6 +15,42 @@ char *m2[] = {
     "           |=|                     ",
     "          __|__                    ",
     "        //.=|=.0                   "};
+
+char *m3[] = {
+    "             _/|    _   | |_       ",
+    "           _/_ |   _|   | _ |      ",
+    "         _/_/| /  /   |  | _ _     ",
+    "       _/_/  |/  /  _  |_ / | |_   ",
+    "     _/_/    ||  | | | o/ ||    |  ",
+    "    /_/  | | | |  |  |_V  /|  | |  ",
+    "   //    ||| |  |_/    |__/ | | |  ",
+    "   / __| || |    |         /  / |  ",
+    "  /_/  ||||  /|        // | |  / | ",
+    " //    |/  /   /         /  |/  /  ",
+    "        |/    |    |    |    |/    ",
+    "              /_|  | |_  |         ",
+    "             / /_| |_||  |         ",
+    "             | / |/||  |  |        ",
+    "              /  /|||/||/ /        ",
+    "                 |/ |  /           "};
+
+char *m4[] = {
+    "                        /|         ",
+    "                        ||         ",
+    "          ____ (((+))) _||_        ",
+    "         /.--.|  .-.  /.||.|       ",
+    "        /.,   |_(0.0)// || |       ",
+    "       /;` ;/   ||m|//  ||  |;     ",
+    "       |:    |   `:`  __||__:|     ",
+    "       |:  |   __ T  (@~)(~@)|     ",
+    "       |: |  _/|     |_ |/  :|     ",
+    "       |:   /  |     | |_   :|     ",
+    "       |'  /   |     |   |  |      ",
+    "        |_/    |     |   |_/       ",
+    "               |     |             ",
+    "               |__|__|             ",
+    "               |_____|             "};
+
 //######################################################
 //                       EXEMPLE                      
 
@@ -58,8 +94,17 @@ void attributSpriteToMonster(Monster * monster){
             monster->sprite[i] = malloc(sizeof(char) * (MONSTER_WIDTH + 1)); // +1 for the null terminator
             strcpy(monster->sprite[i], m1[i]);
         }
-    }
-    else {
+    }else if (monster->type == 3) {
+        for (int i = 0; i < monster->height; i++) {
+            monster->sprite[i] = malloc(sizeof(char) * (MONSTER_WIDTH + 1)); // +1 for the null terminator
+            strcpy(monster->sprite[i], m3[i]);
+        }
+    }else if (monster->type == 4) {
+        for (int i = 0; i < monster->height; i++) {
+            monster->sprite[i] = malloc(sizeof(char) * (MONSTER_WIDTH + 1)); // +1 for the null terminator
+            strcpy(monster->sprite[i], m4[i]);
+        }
+    }else {
         for (int i = 0; i < monster->height; i++) {
             monster->sprite[i] = malloc(sizeof(char) * (MONSTER_WIDTH + 1)); // +1 for the null terminator
             strcpy(monster->sprite[i], m2[i]);
@@ -162,11 +207,12 @@ int exist_weapon(Player *ply, int id)
     return 0;
 }
 
-Fight *init_fight(Player *player){
+
+Fight *init_fight(Player *player, int is_boss){
     Fight *fight = malloc(sizeof(Fight));
     fight->target = -1;
     fight->monsters = NULL;
-    createMonsters(fight, player->difficulty);
+    createMonsters(fight, player->difficulty, is_boss);
     return fight;
 }
 
@@ -189,26 +235,46 @@ void free_fight(Fight *fight){
     }
 }
 
-void createMonster(Monster * monster, int level){
-    srand(time(NULL));
-    monster->health = 10 * level;
-    monster->max_health = 10 * level;
-    monster->def = level;
-    monster->attack_min = 1+level;
-    monster->attack_max = 5+level;
-    monster->current_attack = 0;
-    monster->type = rand() % (2) + 1;
-    monster->exp_drop = 10 + level * 2;
-    monster->height = 5;
-    attributSpriteToMonster(monster);
+
+void createMonster(Monster * monster, int level, int is_boss){
+    if(is_boss){
+        monster->health = 100 * level;
+        monster->max_health = 100 * level;
+        monster->def = 2 * level;
+        monster->attack_min = 1+level * 4;
+        monster->attack_max = 15+level * 4;
+        monster->current_attack = 0;
+        monster->type = rand() % (2) + 3;
+        monster->exp_drop = 20 + level * 12;
+        monster->height = 15;
+        attributSpriteToMonster(monster);
+    }else{
+        srand(time(NULL));
+        monster->health = 10 * level;
+        monster->max_health = 10 * level;
+        monster->def = level;
+        monster->attack_min = 1+level;
+        monster->attack_max = 5+level;
+        monster->current_attack = 0;
+        monster->type = rand() % (2) + 1;
+        monster->exp_drop = 10 + level * 2;
+        monster->height = 5;
+        attributSpriteToMonster(monster);
+    }
 }
 
-void createMonsters(Fight *fight, int level){
-    srand(time(NULL));
-    fight->nbMonsters = rand() % (5) + 1;
-    fight->monsters = malloc(sizeof(Monster) * fight->nbMonsters);
-    for(int i = 0; i < fight->nbMonsters; i++){
-        createMonster(&(fight->monsters[i]), level);
+void createMonsters(Fight *fight, int level, int is_boss){
+    if(is_boss){
+        fight->nbMonsters = 1;
+        fight->monsters = malloc(sizeof(Monster) * fight->nbMonsters);
+        createMonster(&(fight->monsters[0]), level, is_boss);
+    }else{
+        srand(time(NULL));
+        fight->nbMonsters = rand() % (5) + 1;
+        fight->monsters = malloc(sizeof(Monster) * fight->nbMonsters);
+        for(int i = 0; i < fight->nbMonsters; i++){
+            createMonster(&(fight->monsters[i]), level, is_boss);
+        }
     }
 }
 
@@ -267,6 +333,7 @@ void monster_death(Monster *monster, Player *ply)
     }
 }
 
+
 int testMonsterLife(Monster *monster){
     printf("pv monstre %f\n", monster->health);
     if (monster->health <= 0)
@@ -288,6 +355,7 @@ int nb_death_monster(Fight *fight)
 }
 int fights(Fight *fight, Player *ply)
 {
+
     displayMonster(fight);
     int nb = fight->nbMonsters;
     while (1) {
@@ -317,6 +385,7 @@ int fights(Fight *fight, Player *ply)
                 }
             }
             displayMonster(fight);
+
             player_attack(ply, fight, key);
             for (int i = 0; i < fight->nbMonsters; i++) {
                 if (fight->monsters[i].health == -1) {
@@ -324,12 +393,14 @@ int fights(Fight *fight, Player *ply)
                 }
                 monster_death(&fight->monsters[i], ply);
                 printf("pv monstre %d: \033[1;31m %.2f\033[0m\n", i + 1, fight->monsters[i].health);                
+
             }
             }
             if (player_defense(ply, fight) == NULL)
                 return 0;
             printf("\n[Appuyez sur Entrée pour continuer]");
             while (getchar() != '\n');
+
             reinit_player_info(ply);
         }
     return 1;

@@ -37,10 +37,11 @@ typedef struct Fight {
     Monster *monsters;
 } Fight;
 
-Fight *init_fight(Player *player);
+Fight *init_fight(Player *player, int is_boss);
 void free_fight(Fight *fight);
-void createMonster(Monster * monster, int level);
-void createMonsters(Fight *fight, int level);
+void createMonster(Monster * monster, int level, int is_boss);
+void createMonsters(Fight *fight, int level, int is_boss);
+
 
 void attributSpriteToMonster(Monster * monster);
 void displayMonster(Fight *fight);
@@ -57,6 +58,7 @@ int fights(Fight *fight, Player *ply);
 int nb_death_monster(Fight *fight);
 
 int testMonsterLife(Monster *monster);
+
 
 Player *use_spell(Player *ply, int key, Fight *fight);
 Player *player_defense(Player *ply, Fight *fight);
