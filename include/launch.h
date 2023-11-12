@@ -10,4 +10,6 @@ void launch_game(Player *player, Context *context);
 
 void menu(Player *player, Context *context);
 
+int in_game_menu(Player * player);
+
 #endif

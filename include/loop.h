@@ -7,9 +7,11 @@
 #include "player.h"
 #include "exp.h"
 #include "magasin.h"
+#include "launch.h"
+#include "monster.h"
 
 int eventLoop(Player *player, Context *context);
 
-int processUserInput(char userInput, Context* context, Player* player);
+int processUserInput(char userInput, Context* context, Player * player);
 
 #endif

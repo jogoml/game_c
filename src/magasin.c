@@ -17,11 +17,13 @@ void display_inventory_weapon(Weapon **wp, Player *ply)
             printf("%d. Arme: %s\tAttaque Min: %d\tAttaque Max: %d\tNombre d'attaques par tour: %d\tPrix: %.2f\n",
             i+1, wp[i]->name, wp[i]->attaqueMin, wp[i]->attaqueMax, wp[i]->attaquesParTour, wp[i]->price);
     } 
+
 }
 
 void display_inventory_armor(Armor **armor, Player *ply)
 {
     clearScreen();
+
     printf("Argent restant: %.2f\n", ply->money);
     printf("Quelle armure voulez-vous acheter?\n");
     printf("0. Retour\n");
@@ -35,6 +37,7 @@ void display_inventory_armor(Armor **armor, Player *ply)
         if (a == 0)
             printf("%d. Armure: %s\tProtection: %d\tPrix: %.2f\n",
             i + 1, armor[i]->name, armor[i]->protection, armor[i]->price);
+
     }
 }
 

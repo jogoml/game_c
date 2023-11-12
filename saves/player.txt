@@ -1,16 +1,18 @@
-Nom : ezfzref
-Niveau : 35
-Expérience : 50
-Exp next : 52
-Santé : 440.0
-Santer max : 440.0
-Mana : 440
-Argent : 0.00
-Attaque : 0
-Défense : 1
-Attaque Min : 69
-Attaque Max : 70
+Nom : zedzef
+Niveau : 1
+Expérience : 31
+Exp next : 100
+Santé : 63.0
+Santer max : 100.0
+Mana : 50
+Argent : 120.00
+Attaque : 5
+Défense : 2
+Attaque Min : 1
+Attaque Max : 5
 Nb attaque : 1
-Nb arme : 1
+Nb arme : 2
 Nb armure : 1
 Nb sort : 0
+Difficulté : 1
+Count : 1
