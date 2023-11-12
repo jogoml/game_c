@@ -17,7 +17,6 @@ char *m2[] = {
     "        //.=|=.0                   "};
 
 char *m3[] = {
-    "              _          _         ",
     "             _/|    _   | |_       ",
     "           _/_ |   _|   | _ |      ",
     "         _/_/| /  /   |  | _ _     ",
@@ -33,8 +32,7 @@ char *m3[] = {
     "             / /_| |_||  |         ",
     "             | / |/||  |  |        ",
     "              /  /|||/||/ /        ",
-    "                 |/ |  /           ",
-    "                  /                "};
+    "                 |/ |  /           "};
 
 char *m4[] = {
     "                        /|         ",
@@ -159,8 +157,9 @@ void displayMonster(Fight *fight) {
 
 void monster_attack(Monster *monster)
 {
+    srand(time(NULL));
+
     if (monster->health > 0) {
-        srand((unsigned int)time(NULL));
         monster->current_attack = rand() % (monster->attack_max - monster->attack_min + 1) + monster->attack_min;
     }
 }
@@ -205,6 +204,75 @@ int exist_weapon(Player *ply, int id)
             return 1;
     }
     return 0;
+}
+
+Fight *init_fight(Player *player, int is_boss){
+    Fight *fight = malloc(sizeof(Fight));
+    fight->target = -1;
+    fight->monsters = NULL;
+    createMonsters(fight, player->difficulty, is_boss);
+    return fight;
+}
+
+void free_fight(Fight *fight){
+    if(fight != NULL){
+        if(fight->monsters != NULL){
+            for(int i = 0; i < fight->nbMonsters; i++){
+                if(fight->monsters[i].sprite != NULL){
+                    for(int j = 0; j < fight->monsters[i].height; j++){
+                        if(fight->monsters[i].sprite[j] != NULL){
+                            free(fight->monsters[i].sprite[j]);
+                        }
+                    }
+                    free(fight->monsters[i].sprite);
+                }
+            }
+            free(fight->monsters);
+        }
+        free(fight);
+    }
+}
+
+void createMonster(Monster * monster, int level, int is_boss){
+    if(is_boss){
+        monster->health = 100 * level;
+        monster->max_health = 100 * level;
+        monster->def = 2 * level;
+        monster->attack_min = 1+level * 4;
+        monster->attack_max = 15+level * 4;
+        monster->current_attack = 0;
+        monster->type = rand() % (2) + 3;
+        monster->exp_drop = 20 + level * 12;
+        monster->height = 15;
+        attributSpriteToMonster(monster);
+    }else{
+        srand(time(NULL));
+        monster->health = 10 * level;
+        monster->max_health = 10 * level;
+        monster->def = level;
+        monster->attack_min = 1+level;
+        monster->attack_max = 5+level;
+        monster->current_attack = 0;
+        monster->type = rand() % (2) + 1;
+        monster->exp_drop = 10 + level * 2;
+        monster->height = 5;
+        attributSpriteToMonster(monster);
+    }
+}
+
+void createMonsters(Fight *fight, int level, int is_boss){
+    if(is_boss){
+        fight->nbMonsters = 1;
+        fight->monsters = malloc(sizeof(Monster) * fight->nbMonsters);
+        createMonster(&(fight->monsters[0]), level, is_boss);
+    }else{
+        srand(time(NULL));
+        fight->nbMonsters = rand() % (5) + 1;
+        fight->monsters = malloc(sizeof(Monster) * fight->nbMonsters);
+        for(int i = 0; i < fight->nbMonsters; i++){
+            createMonster(&(fight->monsters[i]), level, is_boss);
+        }
+    }
 }
 
 void monster_death(Monster *monster, Player *ply)
@@ -258,6 +326,50 @@ void monster_death(Monster *monster, Player *ply)
             ply->mana += mana;
             printf("Vous avez obtenue %d mana en plus !\n", mana);
         }
+        monster->health = -1;
     }
 }
 
+int nb_death_monster(Fight *fight)
+{
+    int nb = fight->nbMonsters;
+    for (int i = 0; i < fight->nbMonsters; i++) {
+        if (fight->monsters[i].health == -1) {
+            nb--;
+        }
+    }
+    if (nb == 0)
+        return 1;
+    return 0;
+}
+int fights(Fight *fight, Player *ply)
+{
+    int nb = fight->nbMonsters;
+    while (1) {
+        while (ply->nb_attack > 0) {
+            if (nb_death_monster(fight) == 1)
+                break;
+            printf("pv %s %f, mana %d\n",ply->name, ply->health, ply->mana);
+            Weapon *ply_weapon = get_player_current_weapon(ply);
+            printf("Il vous reste encore %d attaques à effectuer\nQuelle action voulez-vous effectuer ? Souhaitez-vous:\n", ply->nb_attack);
+            printf("1- Attaquer avec votre arme %s ?\n2- Utiliser un sort?\n3- Changer votre arme?\n4- Changer d'armure?\n", ply_weapon->name);
+            int key = 0;
+            scanf("%d", &key);
+            while (key < 1 || key > 4) {
+                scanf("%d", &key);
+            }
+            player_attack(ply, fight, key);
+            for (int i = 0; i < fight->nbMonsters; i++) {
+                if (fight->monsters[i].health == -1) {
+                    continue;
+                }
+                monster_death(&fight->monsters[i], ply);
+                printf("pv monstre %d: %f\n", i + 1, fight->monsters[i].health);                
+            }
+            }
+            if (player_defense(ply, fight) == NULL)
+                return 0;
+            reinit_player_info(ply);
+        }
+    return 1;
+}

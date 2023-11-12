@@ -28,9 +28,21 @@ int processUserInput(char userInput, Context* context, Player * player)
     switch(userInput) {
         case 'z':
             if(!(context->y-1<0 || context->map[context->y-1][context->x]=='O' || context->map[context->y-1][context->x]=='N')){
-                if(fight(player) == 0) {
+                int is_boss = 0;
+                if(context->map[context->y-1][context->x]=='B'){
+                    is_boss = 1;
+                }
+                Fight *fight1 = init_fight(player, is_boss);
+                int res = fights(fight1, player);
+                free_fight(fight1);
+                if(res == 0) {
                     endGame(context, player, 0);
                     return 0;
+                }
+                player->count++;
+                if(player->count%3==0){
+                    player->difficulty++;
+                    player->count=0;
                 }
                 player->exp += 10;
                 verify_exp(player);
@@ -39,16 +51,29 @@ int processUserInput(char userInput, Context* context, Player * player)
                     context->map[context->y][context->x]='F';
                 }else if(context->map[context->y][context->x]=='B'){
                     context->map[context->y][context->x]='P';
-                }
+                } else if (context->map[context->y][context->x]=='S')
+                    magasin(player);
 
                 saveMap(context);
             }
             break;
         case 'd':
             if(!(context->x+1>ROWS || context->map[context->y][context->x+1]=='O' || context->map[context->y][context->x+1]=='N')){
-                if(fight(player) == 0) {
+                int is_boss = 0;
+                if(context->map[context->y][context->x+1]=='B'){
+                    is_boss = 1;
+                }
+                Fight *fight1 = init_fight(player, is_boss);
+                int res = fights(fight1, player);
+                free_fight(fight1);
+                if(res == 0) {
                     endGame(context, player, 0);
                     return 0;
+                }
+                player->count++;
+                if(player->count%3==0){
+                    player->difficulty++;
+                    player->count=0;
                 }
                 player->exp += 10;
                 verify_exp(player);
@@ -57,16 +82,29 @@ int processUserInput(char userInput, Context* context, Player * player)
                     context->map[context->y][context->x]='F';
                 }else if(context->map[context->y][context->x]=='B'){
                     context->map[context->y][context->x]='P';
-                }
+                }else if (context->map[context->y][context->x]=='S')
+                    magasin(player);
                 
                 saveMap(context);
             }
             break;
         case 's':
             if(!(context->y+1>COLUMNS || context->map[context->y+1][context->x]=='O' || context->map[context->y+1][context->x]=='N')){
-                if(fight(player) == 0) {
+                int is_boss = 0;
+                if(context->map[context->y+1][context->x]=='B'){
+                    is_boss = 1;
+                }
+                Fight *fight1 = init_fight(player, is_boss);
+                int res = fights(fight1, player);
+                free_fight(fight1);
+                if(res == 0) {
                     endGame(context, player, 0);
                     return 0;
+                }
+                player->count++;
+                if(player->count%3==0){
+                    player->difficulty++;
+                    player->count=0;
                 }
                 player->exp += 10;
                 verify_exp(player);
@@ -75,7 +113,8 @@ int processUserInput(char userInput, Context* context, Player * player)
                     context->map[context->y][context->x]='F';
                 }else if(context->map[context->y][context->x]=='B'){
                     context->map[context->y][context->x]='P';
-                }
+                }else if (context->map[context->y][context->x]=='S')
+                    magasin(player);
                 
                 saveMap(context);
 
@@ -83,9 +122,19 @@ int processUserInput(char userInput, Context* context, Player * player)
             break;
         case 'q':
             if(!(context->x-1<0 || context->map[context->y][context->x-1]=='O' || context->map[context->y][context->x-1]=='N')){
+                int is_boss = 0;
+                if(context->map[context->y][context->x-1]=='B'){
+                    is_boss = 1;
+                }
+                Fight *fight1 = init_fight(player, is_boss);
                 if(fight(player) == 0) {
                     endGame(context, player, 0);
                     return 0;
+                }
+                player->count++;
+                if(player->count%3==0){
+                    player->difficulty++;
+                    player->count=0;
                 }
                 player->exp += 10;
                 verify_exp(player);
@@ -95,6 +144,8 @@ int processUserInput(char userInput, Context* context, Player * player)
                 }else if(context->map[context->y][context->x]=='B'){
                     context->map[context->y][context->x]='P';
                 }
+                else if (context->map[context->y][context->x]=='S')
+                    magasin(player);
 
                 saveMap(context);
             }
@@ -112,9 +163,10 @@ int processUserInput(char userInput, Context* context, Player * player)
         case 'Q':
             return 0;
     }
+
     save_player(player);
-    //save_armor(player);
-    //save_weapon(player);
+    save_armor(player);
+    save_weapon(player);
 
     return 1;
 
