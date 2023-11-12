@@ -6,12 +6,17 @@ void display_inventory_weapon(Weapon **wp, Player *ply)
     printf("Quelle arme voulez-vous acheter?\n");
     printf("Argent restant: %.2f\n", ply->money);
     printf("0. Retour\n");
+    int a = 0;
     for (int i = 0; i < 7; i++) {
-        if (ply->weapons[i] && strcmp(ply->weapons[i]->name, wp[i]->name) == 0)
-            continue;
-        printf("%d. Arme: %s\tAttaque Min: %d\tAttaque Max: %d\tNombre d'attaques par tour: %d\tPrix: %.2f\n",
-        i+1, wp[i]->name, wp[i]->attaqueMin, wp[i]->attaqueMax, wp[i]->attaquesParTour, wp[i]->price);
-    }
+        a = 0;
+        for (int j = 0; j < ply->nb_arme; j++) {
+            if (strcmp(ply->weapons[j]->name, wp[i]->name) == 0)
+                a = 1;
+        }
+        if (a == 0)
+            printf("%d. Arme: %s\tAttaque Min: %d\tAttaque Max: %d\tNombre d'attaques par tour: %d\tPrix: %.2f\n",
+            i+1, wp[i]->name, wp[i]->attaqueMin, wp[i]->attaqueMax, wp[i]->attaquesParTour, wp[i]->price);
+    } 
 }
 
 void display_inventory_armor(Armor **armor, Player *ply)
@@ -20,11 +25,16 @@ void display_inventory_armor(Armor **armor, Player *ply)
     printf("Argent restant: %.2f\n", ply->money);
     printf("Quelle armure voulez-vous acheter?\n");
     printf("0. Retour\n");
+    int a = 0;
     for (int i = 0; i < 7; i++) {
-        if (ply->armors[i] && strcmp(ply->armors[i]->name, armor[i]->name) == 0)
-            continue;
-        printf("%d. Armure: %s\tProtection: %d\tPrix: %.2f\n",
-        i + 1, armor[i]->name, armor[i]->protection, armor[i]->price);
+        a = 0;
+        for (int j = 0; j < ply->nb_armure; j++) {
+            if (strcmp(ply->armors[j]->name, armor[i]->name) == 0)
+                a = 1;
+        }
+        if (a == 0)
+            printf("%d. Armure: %s\tProtection: %d\tPrix: %.2f\n",
+            i + 1, armor[i]->name, armor[i]->protection, armor[i]->price);
     }
 }
 
@@ -34,19 +44,25 @@ void display_inventory_spell(Spell **spell, Player *ply)
     printf("Argent restant: %.2f\n", ply->money);
     printf("Quel sort voulez-vous acheter?\n");
     printf("0. Retour\n");
+    int a = 0;
     for (int i = 0; i < 9; i++) {
-        if (ply->spell[i] && strcmp(ply->spell[i]->name, spell[i]->name) == 0)
-            continue;
-        if (ply->level >= spell[i]->level) {
-            if (spell[i]->type == OFFENSIVE)
-                printf("%d. Sort: %s\tType: Offense\tMana: %d\tDégat: %d\tPrix: %.2f\n", i + 1, spell[i]->name,
-                spell[i]->mana_cost, spell[i]->damage, spell[i]->price);
-            if (spell[i]->type == DEFENSE)
-                printf("%d. Sort: %s\tType: Défense\tMana: %d\tDéfense: %d\tPrix: %.2f\n", i + 1, spell[i]->name,
-                spell[i]->mana_cost, spell[i]->def, spell[i]->price);
-            if (spell[i]->type == CARE)
-                printf("%d. Sort: %s\tType: Soin\tMana: %d\tSoin: %d\tPrix: %.2f\n", i + 1, spell[i]->name,
-                spell[i]->mana_cost, spell[i]->care, spell[i]->price);
+        a = 0;
+        for (int j = 0; j < ply->nb_spell; j++) {
+            if (strcmp(ply->spell[j]->name, spell[i]->name) == 0)
+                a = 1;
+        }
+        if (a == 0) {
+            if (ply->level >= spell[i]->level) {
+                if (spell[i]->type == OFFENSIVE)
+                    printf("%d. Sort: %s\tType: Offense\tMana: %d\tDégat: %d\tPrix: %.2f\n", i + 1, spell[i]->name,
+                    spell[i]->mana_cost, spell[i]->damage, spell[i]->price);
+                if (spell[i]->type == DEFENSE)
+                    printf("%d. Sort: %s\tType: Défense\tMana: %d\tDéfense: %d\tPrix: %.2f\n", i + 1, spell[i]->name,
+                    spell[i]->mana_cost, spell[i]->def, spell[i]->price);
+                if (spell[i]->type == CARE)
+                    printf("%d. Sort: %s\tType: Soin\tMana: %d\tSoin: %d\tPrix: %.2f\n", i + 1, spell[i]->name,
+                    spell[i]->mana_cost, spell[i]->care, spell[i]->price);
+            }
         }
     }
 }
